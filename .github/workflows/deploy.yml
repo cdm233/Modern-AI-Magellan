@@ -41,27 +41,32 @@ jobs:
         target: "/home/ubuntu/tmp_build"  # Temporary directory to store files
         overwrite: true
 
-    # Step 6: Use SSH and sudo to move files to the final directory
-    - name: Move files to the final directory with sudo
-      uses: appleboy/ssh-action@v0.1.3
+    - name: Test ssh actions
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
-        script: 
-          sudo mv /home/ubuntu/tmp_build/* /home/ubuntu/capstone/
+        script: whoami
+
+    - name: Move files to the final directory with sudo
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: sudo mv /home/ubuntu/tmp_build/* /home/ubuntu/capstone/
     
     - name: Change ownership
-      uses: appleboy/ssh-action@v0.1.3
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
-        script: 
-          sudo chown -R www-data:www-data /home/ubuntu/capstone/
+        script: sudo chown -R www-data:www-data /home/ubuntu/capstone/
 
     - name: Restart Nginx on EC2
-      uses: appleboy/ssh-action@v0.1.3
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
