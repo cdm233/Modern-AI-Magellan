@@ -1,14 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Input, Button, Space, Tooltip } from "antd";
-import {
-    AudioOutlined,
-    CopyOutlined,
-    EditOutlined,
-    PauseOutlined,
-    ReloadOutlined,
-    CheckOutlined,
-} from "@ant-design/icons";
+import { AudioOutlined, CopyOutlined, EditOutlined, PauseOutlined, ReloadOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import "./App.css";
+import { format_course_data_source, alphanumerical } from "./utils";
 
 const { TextArea } = Input;
 
@@ -28,7 +22,7 @@ const CopyToClipboardButton = ({ content }) => {
     };
 
     return (
-        <Tooltip placement="bottom" arrow title={'Copy'}>
+        <Tooltip placement="bottom" arrow title={"Copy"}>
             <Button
                 onClick={() => handleCopy(content)}
                 type="text"
@@ -58,18 +52,12 @@ const SpeakModelResponseButton = ({ content }) => {
     };
 
     return (
-        <Tooltip placement="bottom" arrow title={'Read'}>
-            <Button
-                onClick={() => handleModelResponseReadButton(content)}
-                type="text"
-                size="small"
-                shape="circle"
-            >
+        <Tooltip placement="bottom" arrow title={"Read"}>
+            <Button onClick={() => handleModelResponseReadButton(content)} type="text" size="small" shape="circle">
                 <span
                     style={{
                         position: "absolute",
-                        transition:
-                            "opacity 0.2s ease-out, transform 0.5s ease-out",
+                        transition: "opacity 0.2s ease-out, transform 0.5s ease-out",
                         opacity: isSpeaking ? 1 : 0,
                         transform: isSpeaking ? "scale(1)" : "scale(0.8)",
                     }}
@@ -79,8 +67,7 @@ const SpeakModelResponseButton = ({ content }) => {
                 <span
                     style={{
                         position: "absolute",
-                        transition:
-                            "opacity 0.2s ease-out, transform 0.5s ease-out",
+                        transition: "opacity 0.2s ease-out, transform 0.5s ease-out",
                         opacity: isSpeaking ? 0 : 1,
                         transform: isSpeaking ? "scale(0.8)" : "scale(1)",
                     }}
@@ -98,9 +85,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
     const [displayEditButtonHover, setDisplayEditButtonHover] = useState(false);
 
     const [userInputDisabled, setUserInputDisabled] = useState(true);
-    const [currentDisplayText, setCurrentDisplayText] = useState(
-        turn["content"]
-    );
+    const [currentDisplayText, setCurrentDisplayText] = useState(turn["content"]);
 
     const [originalInputText, setOriginalInputText] = useState(turn["content"]);
 
@@ -167,9 +152,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
             </div>
             <div
                 style={{
-                    width: userHidden
-                        ? "calc(100% - 150px)"
-                        : "calc(70% - 150px)",
+                    width: userHidden ? "calc(100% - 150px)" : "calc(70% - 150px)",
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -186,10 +169,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
                         width: "32px",
                         height: "32px",
                         marginRight: "15px",
-                        visibility:
-                            displayEditButtonHover && displayEditButton
-                                ? "visible"
-                                : "hidden",
+                        visibility: displayEditButtonHover && displayEditButton ? "visible" : "hidden",
                     }}
                     shape="circle"
                 >
@@ -200,9 +180,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
                     className="ChatContent"
                     style={{
                         textAlign: "left",
-                        border: userHidden
-                            ? ""
-                            : "1px solid rgb(230, 230, 230)",
+                        border: userHidden ? "" : "1px solid rgb(230, 230, 230)",
                         padding: userHidden ? "5px" : "15px",
                         borderRadius: "15px",
                         width: "calc(100% - 50px)",
@@ -210,9 +188,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
                     }}
                 >
                     {!userHidden ? (
-                        <div
-                            style={{ display: "flex", flexDirection: "column" }}
-                        >
+                        <div style={{ display: "flex", flexDirection: "column" }}>
                             <TextArea
                                 variant="borderless"
                                 value={currentDisplayText}
@@ -236,9 +212,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
                                 <Button
                                     onClick={handleCancelEdit}
                                     style={{
-                                        display: userInputDisabled
-                                            ? "none"
-                                            : "",
+                                        display: userInputDisabled ? "none" : "",
                                     }}
                                 >
                                     Cancel
@@ -246,9 +220,7 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
                                 <Button
                                     onClick={() => updateUserText(index)}
                                     style={{
-                                        display: userInputDisabled
-                                            ? "none"
-                                            : "",
+                                        display: userInputDisabled ? "none" : "",
                                         marginLeft: "15px",
                                     }}
                                     type="primary"
@@ -268,19 +240,10 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
                                     marginTop: "15px",
                                 }}
                             >
-                                <SpeakModelResponseButton
-                                    content={turn["content"]}
-                                />
-                                <CopyToClipboardButton
-                                    content={turn["content"]}
-                                />
+                                <SpeakModelResponseButton content={turn["content"]} />
+                                <CopyToClipboardButton content={turn["content"]} />
                                 <Button
-                                    onClick={() =>
-                                        handleModelResponseRegenerateButton(
-                                            index,
-                                            turn["content"]
-                                        )
-                                    }
+                                    onClick={() => handleModelResponseRegenerateButton(index, turn["content"])}
                                     type="text"
                                     size="small"
                                     style={{ marginLeft: "5px" }}
@@ -306,9 +269,17 @@ const ChatRow = ({ index, turn, chatHistory, setChatHistory }) => {
     );
 };
 
-const ChatInterface = ({ chatHistory, setChatHistory }) => {
+const ChatInterface = ({ chatHistory, setChatHistory, draggingCourse, courseList, queryCourses, setQueryCourses }) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [currentChatValue, setCurrentChatValue] = useState("");
+
+    const [formattedCourseData, setFormattedCourseData] = useState([]);
+
+    useEffect(() => {
+        const formattedData = format_course_data_source(courseList);
+
+        setFormattedCourseData(formattedData);
+    }, [courseList]);
 
     const sendChat = () => {
         if (buttonDisabled) {
@@ -342,25 +313,77 @@ const ChatInterface = ({ chatHistory, setChatHistory }) => {
         >
             <div style={{ height: "92%", minWidth: "850px", maxWidth: "80%" }}>
                 {chatHistory.map((item, index) => (
-                    <ChatRow
-                        key={index}
-                        index={index}
-                        turn={item}
-                        chatHistory={chatHistory}
-                        setChatHistory={setChatHistory}
-                    />
+                    <ChatRow key={index} index={index} turn={item} chatHistory={chatHistory} setChatHistory={setChatHistory} />
                 ))}
             </div>
 
             <div
                 style={{
-                    height: "8%",
-                    width: "80%",
+                    width: "40vw",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
+                    position: "fixed",
+                    bottom: "30px",
                 }}
             >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: "5px",
+                    }}
+                >
+                    {queryCourses.map((item, iterator) => (
+                        <div key={`QC-${alphanumerical()}`}>
+                            <CloseOutlined
+                                className="closeButton"
+                                onClick={() => {
+                                    console.log("Delete course");
+                                    const newData = [...queryCourses];
+                                    newData.splice(iterator, 1);
+                                    setQueryCourses(newData);
+                                }}
+                            />
+
+                            <div
+                                style={{
+                                    width: "130px",
+                                    height: "60px",
+                                    marginRight: "5px",
+                                    color: item["course_status"] === 0 ? "black" : "#f90",
+                                    cursor: 'default'
+
+                                }}
+                                className="CourseCard"
+                            >
+                                <span
+                                    style={{
+                                        fontSize: 14,
+                                        fontFamily: "arial",
+                                        textDecoration: "none",
+                                        color: item["course_status"] === 0 ? "black" : "#f90",
+                                        fontWeight: "bold",
+                                    }}
+                                    className="CourseCardFamily CourseCardCode"
+                                >
+                                    {item["course_code"]}
+                                </span>
+
+                                <div
+                                    style={{
+                                        fontSize: "7pt",
+                                        fontFamily: "arial",
+                                        lineHeight: "1",
+                                    }}
+                                    className="CourseCardFamily CourseCardName"
+                                >
+                                    {item["course_name"]}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 <Space.Compact style={{ width: "100%" }}>
                     <Input
                         placeholder="Ask me anything..."
@@ -369,13 +392,21 @@ const ChatInterface = ({ chatHistory, setChatHistory }) => {
                         onPressEnter={sendChat}
                         style={{ height: 40 }}
                         key={"userInput"}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={() => {
+                            console.log(draggingCourse.current);
+                            console.log(queryCourses);
+                            setQueryCourses([
+                                ...new Set([
+                                    ...queryCourses,
+                                    formattedCourseData[draggingCourse.current.term_row_index].term_courses[
+                                        draggingCourse.current.term_course_index
+                                    ],
+                                ]),
+                            ]);
+                        }}
                     />
-                    <Button
-                        type="primary"
-                        onClick={sendChat}
-                        loading={buttonDisabled}
-                        style={{ height: 40 }}
-                    >
+                    <Button type="primary" onClick={sendChat} loading={buttonDisabled} style={{ height: 40 }}>
                         Send
                     </Button>
                 </Space.Compact>

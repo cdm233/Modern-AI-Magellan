@@ -10,7 +10,7 @@
             "course_term": "20209",
             "course_code": "APS100H1 F",
             "course_name": "Orientation to Engineering",
-            "course_status": 0
+            "course_status": 2
         },
         {
             "course_term": "20209",
@@ -115,12 +115,6 @@
             "course_status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "PEY021H1 F",
-            "course_name": "",
-            "course_status": 1
-        },
-        {
             "course_term": "20221",
             "course_code": "ECE216H1 S",
             "course_name": "Signals and Systems",
@@ -149,12 +143,6 @@
             "course_code": "ECE297H1 S",
             "course_name": "Communication and Design",
             "course_status": 0
-        },
-        {
-            "course_term": "20221",
-            "course_code": "PEY022H1 S",
-            "course_name": "",
-            "course_status": 1
         },
         {
             "course_term": "20225",
@@ -199,12 +187,6 @@
             "course_status": 0
         },
         {
-            "course_term": "20229",
-            "course_code": "PEY031H1 F",
-            "course_name": "",
-            "course_status": 1
-        },
-        {
             "course_term": "20231",
             "course_code": "ECE311H1 S",
             "course_name": "Introduction to Control Systems",
@@ -229,12 +211,6 @@
             "course_status": 0
         },
         {
-            "course_term": "20231",
-            "course_code": "PEY032H1 S",
-            "course_name": "",
-            "course_status": 1
-        },
-        {
             "course_term": "20235",
             "course_code": "PEY400Y1 Y",
             "course_name": "",
@@ -242,19 +218,7 @@
         },
         {
             "course_term": "20239",
-            "course_code": "PEY041H1 F",
-            "course_name": "",
-            "course_status": 1
-        },
-        {
-            "course_term": "20239",
             "course_code": "PEY400Y1 Y",
-            "course_name": "",
-            "course_status": 1
-        },
-        {
-            "course_term": "20241",
-            "course_code": "PEY042H1 S",
             "course_name": "",
             "course_status": 1
         },

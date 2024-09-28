@@ -1,0 +1,66 @@
+[
+    {
+        "key": "total",
+        "categories": "Total Accreditation Units",
+        "minimum": 1870,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "math",
+        "categories": "Mathematics",
+        "minimum": 214.5,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "ns",
+        "categories": "Natural Science",
+        "minimum": 200,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "ns&math",
+        "categories": "Mathematics and Natural Science Combined",
+        "minimum": 462,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "es",
+        "categories": "Engineering Science",
+        "minimum": 247.5,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "ed",
+        "categories": "Engineering Design",
+        "minimum": 247.5,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "es&ed",
+        "categories": "Engineering Science and Engineering Design Combined",
+        "minimum": 990,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    },
+    {
+        "key": "cs",
+        "categories": "Complementary Studies",
+        "minimum": 240,
+        "obtained": 0,
+        "projected": 0,
+        "outstanding": 0
+    }
+]

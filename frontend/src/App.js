@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MainSplitPanelsTwoSides from "./resizablePanels.js";
 import CourseTable from "./userCourseList.js";
 import ChatInterface from "./chatInterface.js";
 import "./App.css";
 import { Space, Layout, Dropdown } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import axios from 'axios';
 
 const { Header, Content } = Layout;
 
@@ -22,16 +23,25 @@ const groupByTerm = (courses) => {
     }, {});
 };
 
-function signOut(){
-	console.log("Signed out.")
+function signOut() {
+    console.log("Signed out.");
 }
 
 function App() {
-    const [current_user_course_list, set_current_user_course_list] = useState(
-        []
-    );
+    const [current_user_course_list, set_current_user_course_list] = useState([]);
+    const [currentUserInfo, setCurrentUserInfo] = useState({
+        "student_number": 1006751267,
+        "student_name": "Demeng Chen",
+        "student_email": "demeng.chen@mail.utoronto.ca",
+        "student_degree": "AECPEBASC",
+        "student_gender": "Male"
+    });
 
     const [groupedCourses, setGroupedCourses] = useState({});
+    const [queryCourses, setQueryCourses] = useState([]);
+
+    // Draggable Course Card State
+    const draggingCard = useRef(null);
 
     const [chatHistory, setChatHistory] = useState([
         {
@@ -51,9 +61,33 @@ function App() {
 
     const [courseListMaxWidth, setCourseListMaxWidth] = useState(100);
     const courseListMinWidth = 3 * 130 + 100;
+    const courseListDefaultWidth = 6 * 130 + 100;
 
     useEffect(() => {
         // Fetch the JSON file from the public folder
+        axios.post('http://localhost:8000/api/user', {
+            request: 'get_user_info',
+            payload: {
+                utorid: 'wangw362', 
+            }
+        }).then(response => {
+            console.log(response.data);
+            const userInfo = response.data;
+
+            setCurrentUserInfo({
+                ...userInfo,
+                "student_initial": userInfo.student_name.split(' ').map((i)=>(i[0].toUpperCase()))
+            });
+            set_current_user_course_list(JSON.parse(userInfo.courseList));
+        }).catch(error => {
+            if (error.response) {
+                console.log(error.response.data);
+                alert(JSON.stringify(error.response.data));
+            } else {
+                console.error('Error', error);
+            }
+        });
+
         fetch("/dummy_data.json")
             .then((response) => response.json())
             .then((data) => {
@@ -61,9 +95,7 @@ function App() {
                 set_current_user_course_list(data.schedule);
                 console.log(data);
             })
-            .catch((error) =>
-                console.error("Error fetching the JSON data:", error)
-            );
+            .catch((error) => console.error("Error fetching the JSON data:", error));
     }, []);
 
     useEffect(() => {
@@ -78,76 +110,71 @@ function App() {
             }
         }
 
-        setCourseListMaxWidth(maxCourseCount * 130 + 100);
+        setCourseListMaxWidth((maxCourseCount + 1) * 130 + 100);
     }, [groupedCourses]);
 
     const userInfoItems = [
         {
             label: (
                 <p className="UserInfoRow">
-                    <strong>Student Number: </strong> 1006751267
+                    <strong>Student Number: </strong> {currentUserInfo.student_number}
                 </p>
             ),
             key: "0",
-			style: {
-				cursor: 'default'
-			}
+            style: {
+                cursor: "default",
+            },
         },
         {
             label: (
                 <p className="UserInfoRow">
-                    <strong>Student Email: </strong>{" "}
-                    demeng.chen@mail.utoronto.ca
+                    <strong>Student Email: </strong> {currentUserInfo.student_email}
                 </p>
             ),
             key: "1",
-			style: {
-				cursor: 'default'
-			}
+            style: {
+                cursor: "default",
+            },
         },
         {
             label: (
                 <p className="UserInfoRow">
-                    <strong>Student Gender: </strong> Male
+                    <strong>Student Gender: </strong> {currentUserInfo.student_gender}
                 </p>
             ),
             key: "2",
-			style: {
-				cursor: 'default'
-			}
+            style: {
+                cursor: "default",
+            },
         },
         {
             label: (
                 <p className="UserInfoRow">
-                    <strong>Degree Post: </strong> 
-					<span>AECPEBASC</span>
+                    <strong>Degree Post: </strong>
+                    <span>{currentUserInfo.student_degree}</span>
                 </p>
             ),
             key: "3",
             type: "info",
-			style: {
-				cursor: 'default'
-			}
+            style: {
+                cursor: "default",
+            },
         },
         {
             type: "divider",
         },
         {
             label: "Sign Out",
-			onClick: signOut,
+            onClick: signOut,
             key: "4",
         },
     ];
 
-    console.log("CI/CD testing 18.")
-
     return (
-        <div className="App" style={{ padding: "5px" }}>
+        <div className="App" style={{ padding: "5px"}}>
             <Layout>
                 <Header className="AppHeader">
-                    <strong style={{ fontSize: "20pt" }}>
-                        ECE496 Capstone Project - Smartgellan{" "}
-                    </strong>
+                    <strong style={{ fontSize: "20pt" }}>ECE496 Capstone Project - Smartgellan </strong>
 
                     <div
                         style={{
@@ -157,38 +184,45 @@ function App() {
                             alignItems: "center",
                         }}
                     >
-                        <div
-                            className="UserAvatar"
-                            style={{ marginRight: "10px" }}
-                        >
-                            DC
+                        <div className="UserAvatar" style={{ marginRight: "10px" }}>
+                        {currentUserInfo.student_name.split(' ').map((i)=>(i[0].toUpperCase()))}
                         </div>
                         <Dropdown
                             menu={{
                                 items: userInfoItems,
                             }}
                             trigger={["click"]}
-							placement="bottomRight"
+                            placement="bottomRight"
                             arrow
                         >
                             <Space>
-                                <strong style={{ cursor: "pointer" }}>
-                                    Demeng Chen
-                                </strong>
+                                <strong style={{ cursor: "pointer" }}>{currentUserInfo.student_name}</strong>
                                 <DownOutlined style={{ cursor: "pointer" }} />
                             </Space>
                         </Dropdown>
                     </div>
                 </Header>
-                <Content>
+                <Content style={{height: 'calc(100vh - 77px)'}}>
                     <MainSplitPanelsTwoSides
                         minWidth={courseListMinWidth}
                         maxWidth={courseListMaxWidth}
-                        left={<CourseTable groupedCourses={groupedCourses} />}
+                        defaultWidth={courseListDefaultWidth}
+                        left={
+                            <CourseTable
+                                groupedCourses={groupedCourses}
+                                draggingCard={draggingCard}
+                                queryCourses={queryCourses}
+                                setQueryCourses={setQueryCourses}
+                            />
+                        }
                         right={
                             <ChatInterface
                                 chatHistory={chatHistory}
                                 setChatHistory={setChatHistory}
+                                draggingCourse={draggingCard}
+                                courseList={groupedCourses}
+                                queryCourses={queryCourses}
+                                setQueryCourses={setQueryCourses}
                             />
                         }
                     />
