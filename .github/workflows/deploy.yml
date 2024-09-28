@@ -12,11 +12,11 @@ jobs:
     steps:
     # Step 1: Check out the repository
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     # Step 2: Set up Node.js (no working-directory for uses)
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '16'
 
