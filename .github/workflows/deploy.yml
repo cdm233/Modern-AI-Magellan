@@ -14,33 +14,33 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Step 2: Navigate to the frontend folder, set up Node.js, and install dependencies
-    - name: Set up Node.js and install dependencies
-      working-directory: ./frontend  # Specify the frontend directory
+    # Step 2: Set up Node.js (no working-directory for uses)
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '16'
 
+    # Step 3: Navigate to the frontend folder and install dependencies
     - name: Install dependencies
-      working-directory: ./frontend  # Specify the frontend directory
       run: npm install
-
-    # Step 3: Build the React app
-    - name: Build the app
       working-directory: ./frontend  # Specify the frontend directory
-      run: npm run build
 
-    # Step 4: Upload the build files to EC2 via SCP
+    # Step 4: Build the React app
+    - name: Build the app
+      run: npm run build
+      working-directory: ./frontend  # Specify the frontend directory
+
+    # Step 5: Upload the build files to EC2 via SCP
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.1.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
-        source: "frontend/build/*"  # Make sure to point to the build directory in the frontend folder
+        source: "frontend/build/*"  # Point to the build directory in the frontend folder
         target: "/home/ubuntu/capstone/frontend"  # Replace with your EC2 deployment directory
 
-    # Step 5: Restart the web server (e.g., Nginx) on the EC2 instance
+    # Step 6: Restart the web server (e.g., Nginx) on the EC2 instance
     - name: Execute SSH command to restart server
       uses: appleboy/ssh-action@v0.1.3
       with:
