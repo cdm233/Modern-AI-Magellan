@@ -39,6 +39,7 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         source: "frontend/build/*"  # Point to the build directory in the frontend folder
         target: "/home/ubuntu/capstone/"  # Replace with your EC2 deployment directory
+        overwrite: true
 
     # Step 6: Restart the web server (e.g., Nginx) on the EC2 instance
     - name: Execute SSH command to restart server
