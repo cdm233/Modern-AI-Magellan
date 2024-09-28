@@ -14,7 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js (no working-directory for uses)
+    # Step 2: Set up Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
@@ -30,23 +30,34 @@ jobs:
       run: npm run build
       working-directory: ./frontend  # Specify the frontend directory
 
-    # Step 5: Upload the build files to EC2 via SCP
-    - name: Copy files via SSH
+    # Step 5: Upload the build files to a temporary directory on EC2
+    - name: Copy files to a temporary directory on EC2
       uses: appleboy/scp-action@v0.1.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
         source: "frontend/build/*"  # Point to the build directory in the frontend folder
-        target: "/home/ubuntu/capstone/"  # Replace with your EC2 deployment directory
+        target: "/home/ubuntu/tmp_build"  # Temporary directory to store files
         overwrite: true
 
-    # Step 6: Restart the web server (e.g., Nginx) on the EC2 instance
-    - name: Execute SSH command to restart server
+    # Step 6: Use SSH and sudo to move files to the final directory
+    - name: Move files to the final directory with sudo
       uses: appleboy/ssh-action@v0.1.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
-        script: 
+        script: |
+          sudo mv /home/ubuntu/tmp_build/* /home/ubuntu/capstone/
+          sudo chown -R www-data:www-data /home/ubuntu/capstone/  # If needed, change ownership for web server
+
+    # Step 7: Restart the web server (e.g., Nginx) on the EC2 instance
+    - name: Restart Nginx on EC2
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
           sudo systemctl restart nginx  # Or the appropriate command for your web server
