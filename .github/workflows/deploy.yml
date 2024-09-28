@@ -52,13 +52,13 @@ jobs:
           sudo mv /home/ubuntu/tmp_build/* /home/ubuntu/capstone/
     
     - name: Change ownership
-          uses: appleboy/ssh-action@v0.1.3
-          with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USER }}
-            key: ${{ secrets.EC2_KEY }}
-            script: 
-              sudo chown -R www-data:www-data /home/ubuntu/capstone/
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: 
+          sudo chown -R www-data:www-data /home/ubuntu/capstone/
 
     - name: Restart Nginx on EC2
       uses: appleboy/ssh-action@v0.1.3
