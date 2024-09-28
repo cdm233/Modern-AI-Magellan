@@ -139,7 +139,7 @@ function App() {
         },
     ];
 
-    console.log("CI/CD testing 5.")
+    console.log("CI/CD testing 7.")
 
     return (
         <div className="App" style={{ padding: "5px" }}>
