@@ -1,0 +1,51 @@
+name: Deploy React App to EC2
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the "main" branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Navigate to the frontend folder, set up Node.js, and install dependencies
+    - name: Set up Node.js and install dependencies
+      working-directory: ./frontend  # Specify the frontend directory
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      working-directory: ./frontend  # Specify the frontend directory
+      run: npm install
+
+    # Step 3: Build the React app
+    - name: Build the app
+      working-directory: ./frontend  # Specify the frontend directory
+      run: npm run build
+
+    # Step 4: Upload the build files to EC2 via SCP
+    - name: Copy files via SSH
+      uses: appleboy/scp-action@v0.1.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        source: "frontend/build/*"  # Make sure to point to the build directory in the frontend folder
+        target: "/home/ubuntu/capstone/frontend"  # Replace with your EC2 deployment directory
+
+    # Step 5: Restart the web server (e.g., Nginx) on the EC2 instance
+    - name: Execute SSH command to restart server
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          sudo systemctl restart nginx  # Or the appropriate command for your web server

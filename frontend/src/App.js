@@ -139,6 +139,8 @@ function App() {
         },
     ];
 
+    console.log("CI/CD testing.")
+
     return (
         <div className="App" style={{ padding: "5px" }}>
             <Layout>
