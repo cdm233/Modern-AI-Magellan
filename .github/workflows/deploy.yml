@@ -38,7 +38,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
         source: "frontend/build/*"  # Point to the build directory in the frontend folder
-        target: "/home/ubuntu/tmp_build"  # Temporary directory to store files
+        target: "/home/ubuntu/tmp_build/${{ github.sha }}"  # Temporary directory to store files
         overwrite: true
 
     - name: Move files to the final directory with sudo
