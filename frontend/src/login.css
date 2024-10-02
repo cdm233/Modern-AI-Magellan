@@ -1,0 +1,28 @@
+.login-container {
+    width: 350px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+	height: 280px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-top: 20vh;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 15px;
+}
+

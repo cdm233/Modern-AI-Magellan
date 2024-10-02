@@ -1,24 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Col, Row, Table, Divider, Button, ConfigProvider, Modal, Popover, Tabs, Input, Alert, Checkbox, Flex } from "antd";
+import { Col, Row, Table, Divider, Button, ConfigProvider, Modal, Popover, Tabs, Input, Alert, Checkbox, Flex, Typography, List } from "antd";
 import { SearchOutlined, QuestionCircleTwoTone, CloseOutlined } from "@ant-design/icons";
 import { OnEmptyPopup, OnCardPopup } from "./menuPopUp";
 import { format_course_data_source, alphanumerical } from "./utils";
 import axios from "axios";
-import ceab_default_data from './ceab_data_default.json'
+import ceab_default_data from "./ceab_data_default.json";
+import { Link } from "react-router-dom";
 
 // Model of a course
 const dummy_course = {
-    "course_term": "20239",
-    "course_code": "PEY400Y1 Y",
-    "course_name": "",
-    "course_status": 1,
-    "ceab": {
-        'ES': 12,
+    course_term: "20239",
+    course_code: "PEY400Y1 Y",
+    course_name: "",
+    course_status: 1,
+    ceab: {
+        ES: 12,
         // ...
     },
-    'area': 1,
-    'type': 'hss'
-}
+    area: 1,
+    type: "hss",
+};
+
+const { Title, Text } = Typography;
 
 const courseDeliveryColumns = [
     {
@@ -92,7 +95,7 @@ function getCourseColor(status) {
 }
 
 // React component to display courses in a grid layout
-const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCourses }) => {
+const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCourses, userInfo }) => {
     // TODO: [finished] Draggable Cards
     // TODO: [partially finished] Right Click Menu
     //    - Right click "add course" should show a separate popup from search course input field that's more suitable
@@ -104,21 +107,95 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
     const [formattedCourseData, setFormattedCourseData] = useState([]);
 
+    const [graduationCheckList, setGraduationCheckList] = useState([]);
+
     useEffect(() => {
         const formattedData = format_course_data_source(groupedCourses);
 
         setFormattedCourseData(formattedData);
     }, [groupedCourses]);
 
-    const calculateCEABData = ()=>{
-        console.log("Recalculate CEAB")
+    const getGraduationCheckList = ()=>{
+        const all_checks = [
+            ()=>{
+                const success_text = "All required core years courses were taken and passed!";
+                const fail_text = "Some required core years courses were not taken or passed!";
 
-        if(formattedCourseData.length === 0){
+                const success = false;
+
+                const return_text = success ? success_text : fail_text;
+
+                return [success, return_text];
+            },
+            ()=>{
+                const success_text = "All required core years courses were taken and passed!";
+                const fail_text = "Some required core years courses were not taken or passed!";
+
+                const success = false;
+
+                const return_text = success ? success_text : fail_text;
+
+                return [success, return_text];
+            },
+            ()=>{
+                const success_text = "All required core years courses were taken and passed!";
+                const fail_text = "Some required core years courses were not taken or passed!";
+
+                const success = true;
+
+                const return_text = success ? success_text : fail_text;
+
+                return [success, return_text];
+            },
+            ()=>{
+                const success_text = "All required core years courses were taken and passed!";
+                const fail_text = "Some required core years courses were not taken or passed!";
+
+                const success = true;
+
+                const return_text = success ? success_text : fail_text;
+
+                return [success, return_text];
+            },
+            ()=>{
+                const success_text = "All required core years courses were taken and passed!";
+                const fail_text = "Some required core years courses were not taken or passed!";
+
+                const success = false;
+
+                const return_text = success ? success_text : fail_text;
+
+                return [success, return_text];
+            },
+        ];
+
+        const return_list = [];
+
+        for(const check of all_checks){
+            const [cur_check_passed, text] = check();
+            
+            return_list.push({
+                'status': cur_check_passed,
+                'text': text
+            })
+        }
+
+        return return_list;
+    }
+
+    useEffect(()=>{
+        setGraduationCheckList(getGraduationCheckList());
+    }, [formattedCourseData]);
+
+    const calculateCEABData = () => {
+        console.log("Recalculate CEAB");
+
+        if (formattedCourseData.length === 0) {
             return;
         }
 
-        console.log(formattedCourseData);
-        
+        // console.log(formattedCourseData);
+
         // course.Math
         // course.NS
         // (course.NS + course.Math)
@@ -129,48 +206,48 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         // (course.Math + course.NS + course.CS + course.ES + course.ED)
 
         var dummyCEABDetails = [...ceab_default_data];
-        for(const term of formattedCourseData){
-            for(const course of term.term_courses){
-                if(course.course_status === 0){
-                    dummyCEABDetails[1]['obtained'] += course.Math || 0;
-                    dummyCEABDetails[2]['obtained'] += course.NS || 0;
-                    dummyCEABDetails[3]['obtained'] += (course.NS + course.Math) || 0;
-                    dummyCEABDetails[4]['obtained'] += course.ES || 0;
-                    dummyCEABDetails[5]['obtained'] += course.ED || 0;
-                    dummyCEABDetails[6]['obtained'] += (course.ES + course.ED) || 0;
-                    dummyCEABDetails[7]['obtained'] += course.CS || 0;
-                    dummyCEABDetails[0]['obtained'] += (course.Math + course.NS + course.CS + course.ES + course.ED) || 0;
-                } else if(course.course_status === 1){
-                    dummyCEABDetails[1]['projected'] += course.Math || 0;
-                    dummyCEABDetails[2]['projected'] += course.NS || 0;
-                    dummyCEABDetails[3]['projected'] += (course.NS + course.Math) || 0;
-                    dummyCEABDetails[4]['projected'] += course.ES || 0;
-                    dummyCEABDetails[5]['projected'] += course.ED || 0;
-                    dummyCEABDetails[6]['projected'] += (course.ES + course.ED) || 0;
-                    dummyCEABDetails[7]['projected'] += course.CS || 0;
-                    dummyCEABDetails[0]['projected'] += (course.Math + course.NS + course.CS + course.ES + course.ED) || 0;
+        for (const term of formattedCourseData) {
+            for (const course of term.term_courses) {
+                if (course.course_status === 0) {
+                    dummyCEABDetails[1]["obtained"] += course.Math || 0;
+                    dummyCEABDetails[2]["obtained"] += course.NS || 0;
+                    dummyCEABDetails[3]["obtained"] += course.NS + course.Math || 0;
+                    dummyCEABDetails[4]["obtained"] += course.ES || 0;
+                    dummyCEABDetails[5]["obtained"] += course.ED || 0;
+                    dummyCEABDetails[6]["obtained"] += course.ES + course.ED || 0;
+                    dummyCEABDetails[7]["obtained"] += course.CS || 0;
+                    dummyCEABDetails[0]["obtained"] += course.Math + course.NS + course.CS + course.ES + course.ED || 0;
+                } else if (course.course_status === 1) {
+                    dummyCEABDetails[1]["projected"] += course.Math || 0;
+                    dummyCEABDetails[2]["projected"] += course.NS || 0;
+                    dummyCEABDetails[3]["projected"] += course.NS + course.Math || 0;
+                    dummyCEABDetails[4]["projected"] += course.ES || 0;
+                    dummyCEABDetails[5]["projected"] += course.ED || 0;
+                    dummyCEABDetails[6]["projected"] += course.ES + course.ED || 0;
+                    dummyCEABDetails[7]["projected"] += course.CS || 0;
+                    dummyCEABDetails[0]["projected"] += course.Math + course.NS + course.CS + course.ES + course.ED || 0;
                 }
             }
         }
 
-        for(var row of dummyCEABDetails){
-            var outstanding = row['minimum'] - row['projected'];
+        for (var row of dummyCEABDetails) {
+            var outstanding = row["minimum"] - row["projected"];
 
-            if(outstanding > 0){
-                row['outstanding'] = outstanding;
+            if (outstanding > 0) {
+                row["outstanding"] = outstanding;
             } else {
-                row['outstanding'] = 'OK';
+                row["outstanding"] = "OK";
             }
         }
 
-        console.log(dummyCEABDetails);
+        // console.log(dummyCEABDetails);
         setCEABDetailsData(dummyCEABDetails);
-    }
+    };
 
     // Recalculate ceab data when course list changes
-    useEffect(()=>{
+    useEffect(() => {
         calculateCEABData();
-    }, [formattedCourseData])
+    }, [formattedCourseData]);
 
     const [courseSearchValue, setCourseSearchValue] = useState("");
 
@@ -221,7 +298,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         ceab: [0, 0, 0, 32, 21.4],
 
         // Not Taken, Passed, Failed, In Progress, Planned
-        status: 'Not Taken'
+        status: "Not Taken",
     });
 
     const [CEABDetailsData, setCEABDetailsData] = useState(ceab_default_data);
@@ -658,7 +735,10 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                         }}
                     >
                         {courses.map((course, index) => (
-                            <Col key={`col-${alphanumerical()}`} style={{ padding: 0, display: "flex", transition: "all 0.3s ease-in-out" }}>
+                            <Col
+                                key={`col-${alphanumerical()}`}
+                                style={{ padding: 0, display: "flex", transition: "all 0.3s ease-in-out" }}
+                            >
                                 {course["course_code"] !== null && (
                                     <div
                                         className="courseCardMarginLeft"
@@ -784,12 +864,12 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         setAlertMessage(null);
     };
 
-    const text = <span>Title</span>;
+    const tutorialTitle = <span>Tutorial</span>;
 
     const tutorialContent = (
         <div>
-            <p>Content</p>
-            <p>Content</p>
+            <p>Content1</p>
+            <p>Content2</p>
         </div>
     );
 
@@ -801,7 +881,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
     const RequiredCourseCardSmall = ({ course_codes }) => {
         return course_codes.map((course_code) => {
             const course_info = findCourse(course_code);
-            const course_passed =  course_info !== null && course_info.course_status === 0;
+            const course_passed = course_info !== null && course_info.course_status === 0;
             return (
                 <Col
                     className="lowerProgramRequirementSmallCard"
@@ -846,12 +926,11 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                     }}
                     key={`ESCS-${alphanumerical()}`}
                 >
-                    <span style={{color: getCourseColor(course_info && course_info.course_status)}}>{course_code}</span>
+                    <span style={{ color: getCourseColor(course_info && course_info.course_status) }}>{course_code}</span>
                 </Col>
             );
         });
     };
-
 
     const CEABDetailsColumns = [
         {
@@ -859,11 +938,9 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             dataIndex: "categories",
             key: "categories",
             align: "left",
-            render: (item)=>{
-                return (
-                    <p style={{fontWeight: 'bold'}}>{item}</p>
-                )
-            }
+            render: (item) => {
+                return <p style={{ fontWeight: "bold" }}>{item}</p>;
+            },
         },
         {
             title: "Minimum Requirement",
@@ -876,35 +953,31 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             dataIndex: "obtained",
             key: "obtained",
             align: "center",
-            render: (text, record, row)=>{
-                return (
-                    <p style={{color:  text < record['minimum'] ? 'red' : 'green'}}>{text}</p>
-                )
-            }
+            render: (text, record, row) => {
+                return <p style={{ color: text < record["minimum"] ? "red" : "green" }}>{text}</p>;
+            },
         },
         {
             title: "Projected",
             dataIndex: "projected",
             key: "projected",
             align: "center",
-            render: (text, record, row)=>{
-                return (
-                    <p style={{color:  text < record['minimum'] ? 'red' : 'green'}}>{text}</p>
-                )
-            }
+            render: (text, record, row) => {
+                return <p style={{ color: text < record["minimum"] ? "red" : "green" }}>{text}</p>;
+            },
         },
         {
             title: "Outstanding",
             dataIndex: "outstanding",
             key: "outstanding",
             align: "center",
-            render: (text, record, row)=>{
-                return (
-                    <p style={{color:  text > 0 ? 'red' : 'green'}}>{text}</p>
-                )
-            }
-        }
-    ]
+            render: (text, record, row) => {
+                return <p style={{ color: text > 0 ? "red" : "green" }}>{text}</p>;
+            },
+        },
+    ];
+
+    const canGraduate = !graduationCheckList.some(item => !item['status']);
 
     const essentialColumns = [
         {
@@ -912,68 +985,66 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             dataIndex: "course_name",
             key: "course_name",
             align: "left",
-            render: (item)=>{
-                return (
-                    <p style={{fontWeight: 'bold'}}>{item}</p>
-                )
-            }
+            render: (item) => {
+                return <p style={{ fontWeight: "bold" }}>{item}</p>;
+            },
         },
         {
             title: "",
             dataIndex: "courses",
             key: "courses",
             align: "center",
-            render: (item, record, row)=>{
+            render: (item, record, row) => {
                 return (
                     <Row>
-                        <EssentialsCourseCardSmall course_codes={item}/>
+                        <EssentialsCourseCardSmall course_codes={item} />
                     </Row>
-                )
-            }
+                );
+            },
         },
-    ]
+    ];
 
     const essentialData = [
         {
-            course_name: 'Engineering Economics',
-            key: 'engineering_economics',
-            courses: ['ECE472H1'],
+            course_name: "Engineering Economics",
+            key: "engineering_economics",
+            courses: ["ECE472H1"],
         },
         {
-            course_name: 'Capstone',
-            key: 'capstone',
-            courses: ['ECE496Y1']
+            course_name: "Capstone",
+            key: "capstone",
+            courses: ["ECE496Y1"],
         },
         {
-            course_name: 'Science/Math',
-            key: 'science/math',
-            courses: ['ECE302H1']
+            course_name: "Science/Math",
+            key: "science/math",
+            courses: ["ECE302H1"],
         },
         {
-            course_name: 'Technical Electives',
-            key: 'technical_electives',
-            courses: ['CSC317H1', 'ECE326H1', 'ECE454H1']
+            course_name: "Technical Electives",
+            key: "technical_electives",
+            courses: ["CSC317H1", "ECE326H1", "ECE454H1"],
         },
         {
-            course_name: 'HSS and CS',
-            key: 'HSS&CS',
-            courses: ['CLA204H1', 'LIN102H1', 'JRE300H1', 'JRE410H1']
+            course_name: "HSS and CS",
+            key: "HSS&CS",
+            courses: ["CLA204H1", "LIN102H1", "JRE300H1", "JRE410H1"],
         },
         {
-            course_name: 'Free Elective',
-            key: 'free_elective',
-            courses: ['CSC384H1']
+            course_name: "Free Elective",
+            key: "free_elective",
+            courses: ["CSC384H1"],
         },
-    ]
+    ];
 
     const lowerTabsContent = [
         {
             label: `Core Years`,
             key: "core_years_tab",
             children: (
-                <div className="lowerProgramRequirementWrapper">
+                <div className="lowerProgramRequirementWrapper" style={{paddingRight: '24px'}}>
                     <div style={{ textAlign: "left" }}>
-                        <span style={{ fontWeight: "bold", fontSize: "16pt" }}>First Year</span>
+                        <Title level={3}>First Year</Title>
                     </div>
                     <Row>
                         <RequiredCourseCardSmall course_codes={firstSemRequiredCourses}></RequiredCourseCardSmall>
@@ -985,7 +1056,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
                     <Divider />
                     <div style={{ textAlign: "left" }}>
-                        <span style={{ fontWeight: "bold", fontSize: "16pt" }}>Second Year</span>
+                        <Title level={3}>Second Year</Title>
                     </div>
                     <Row>
                         <RequiredCourseCardSmall course_codes={thirdSemRequiredCourses}></RequiredCourseCardSmall>
@@ -1005,21 +1076,13 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         {
             label: `Electives and Essentials`,
             key: "additional_required_courses",
-            children: (
-                <Table
-                    columns={essentialColumns}
-                    dataSource={essentialData}
-                    showHeader={false}
-                    pagination={false}
-                    size="small"
-                />
-            ),
+            children: <Table style={{paddingRight: '24px'}} columns={essentialColumns} dataSource={essentialData} showHeader={false} pagination={false} size="small" />,
         },
         {
             label: `CEAB Requirements`,
             key: "ceab_requirements_tab",
             children: (
-                <div>
+                <div style={{paddingRight: '24px'}}>
                     <Table
                         columns={CEABDetailsColumns}
                         dataSource={CEABDetailsData}
@@ -1035,22 +1098,48 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             ),
         },
         {
-            label: `PEY Requirements`,
-            key: "pey_requirements_tab",
-            children: `You do NOT meet the Practical Experience requirement.`,
-        },
-        {
-            label: `Graduation Eligibility`,
+            label: `Graduation Status`,
             key: "graduation_eligibility_tab",
-            children: `Profile does not meet the Practical Experience Requirement.
+            children: (
+                <div style={{paddingRight: '24px'}}>
+                    <div style={{ textAlign: "left" }}>
+                        <Title level={3}>PEY Requirement</Title>
 
-This profile does not meet all requirements, as a result you will not graduate!`,
+                        {userInfo && userInfo["PEY"] ? (
+                            <Text type="success" strong>You meet the Practical Experience requirement.</Text>
+                        ) : (
+                            <Text type="danger" strong>You do NOT meet the Practical Experience requirement currently.</Text>
+                        )}
+                    </div>
+                    <Divider style={{}}/>
+                    <div style={{ textAlign: "left" }}>
+                        <Title level={3}>Graduation Eligibility</Title>
+                        <List
+                            size="small"
+                            dataSource={graduationCheckList}
+                            renderItem={(item, index) => (
+                                <List.Item>
+                                    <Text type={item['status'] ? 'success' : 'danger'} strong> {index + 1}: {item['text']} </Text>
+                                </List.Item>
+                            )}
+                        />
+
+                        {/* <Divider/> */}
+                        
+                        <div style={{textAlign: 'center'}}>
+                            <Title level={4} type={canGraduate ? "success" : "danger"}>{canGraduate ? "You can graduate!" : "You can't graduate!"}</Title>
+                        </div>
+                    </div>
+                </div>
+            ),
         },
     ];
 
+    // Profile does not meet the Practical Experience Requirement.
+    // This profile does not meet all requirements, as a result you will not graduate!
 
     return (
-        <div className="course-table" style={{overflow: 'auto'}} ref={tableRef}>
+        <div className="course-table" style={{ overflow: "auto" }} ref={tableRef}>
             <Modal
                 title={`${currentCourseDetails.course_code} - ${currentCourseDetails.course_name} (${currentCourseDetails.offered})`}
                 open={courseInfoModalOpen}
@@ -1058,7 +1147,7 @@ This profile does not meet all requirements, as a result you will not graduate!`
                 onCancel={handleCancel}
                 width={750}
                 style={{
-                    top: '5%'
+                    top: "5%",
                 }}
             >
                 <div>
@@ -1224,28 +1313,30 @@ This profile does not meet all requirements, as a result you will not graduate!`
                             >
                                 <div>
                                     <span>Course List</span>
-                                    <Popover placement="rightTop" title={text} content={tutorialContent} trigger={"hover"}>
-                                        <QuestionCircleTwoTone
-                                            style={{ marginLeft: "10px" }}
-                                            onClick={() => {
-                                                console.log("clicked questions");
-                                                manipulateCourseList({
-                                                    action: "swap",
-                                                    source_course: {
-                                                        course_code: "JRE410H1 F",
-                                                        course_name: "Markets and Competitive Strategy",
-                                                        course_term: "20249",
-                                                        course_status: 1,
-                                                    },
-                                                    dest_course: {
-                                                        course_code: "ECE462H1 S",
-                                                        course_name: "Multimedia System",
-                                                        course_term: "20251",
-                                                        course_status: 1,
-                                                    },
-                                                });
-                                            }}
-                                        />
+                                    <Popover placement="rightTop" title={tutorialTitle} content={tutorialContent} trigger={"hover"}>
+                                        <Link to="about">
+                                            <QuestionCircleTwoTone
+                                                style={{ marginLeft: "10px" }}
+                                                onClick={() => {
+                                                    console.log("clicked questions");
+                                                    manipulateCourseList({
+                                                        action: "swap",
+                                                        source_course: {
+                                                            course_code: "JRE410H1 F",
+                                                            course_name: "Markets and Competitive Strategy",
+                                                            course_term: "20249",
+                                                            course_status: 1,
+                                                        },
+                                                        dest_course: {
+                                                            course_code: "ECE462H1 S",
+                                                            course_name: "Multimedia System",
+                                                            course_term: "20251",
+                                                            course_status: 1,
+                                                        },
+                                                    });
+                                                }}
+                                            />
+                                        </Link>
                                     </Popover>
                                 </div>
 
@@ -1270,7 +1361,12 @@ This profile does not meet all requirements, as a result you will not graduate!`
                     )}
                 />
                 <OnEmptyPopup {...emptyPopupState} queryCourses={queryCourses} setQueryCourses={setQueryCourses} />
-                <OnCardPopup {...cardPopupState} queryCourses={queryCourses} setQueryCourses={setQueryCourses} setCourseList={setFormattedCourseData} />
+                <OnCardPopup
+                    {...cardPopupState}
+                    queryCourses={queryCourses}
+                    setQueryCourses={setQueryCourses}
+                    setCourseList={setFormattedCourseData}
+                />
             </ConfigProvider>
 
             <Divider

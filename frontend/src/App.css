@@ -174,9 +174,11 @@
 }
 
 .lowerProgramRequirementSmallCard {
-  width: 110px;
+  width: 105px;
   height: 35px;
   text-align: justify;
+  padding-left: 2px;
+  padding-right: 2px;
   border: 1px solid #dedede;
   display: flex;
   flex-direction: row;

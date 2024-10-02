@@ -71,18 +71,18 @@ function App() {
                 utorid: 'wangw362', 
             }
         }).then(response => {
-            console.log(response.data);
             const userInfo = response.data;
+            console.log(userInfo);
 
-            setCurrentUserInfo({
-                ...userInfo,
-                "student_initial": userInfo.student_name.split(' ').map((i)=>(i[0].toUpperCase()))
-            });
-            set_current_user_course_list(JSON.parse(userInfo.courseList));
+            // setCurrentUserInfo({
+            //     ...userInfo,
+            //     "student_initial": userInfo.student_name.split(' ').map((i)=>(i[0].toUpperCase()))
+            // });
+            // set_current_user_course_list(JSON.parse(userInfo.courseList));
         }).catch(error => {
             if (error.response) {
                 console.log(error.response.data);
-                alert(JSON.stringify(error.response.data));
+                // alert(JSON.stringify(error.response.data));
             } else {
                 console.error('Error', error);
             }
@@ -93,7 +93,6 @@ function App() {
             .then((data) => {
                 // Update current user data after fetch
                 set_current_user_course_list(data.schedule);
-                console.log(data);
             })
             .catch((error) => console.error("Error fetching the JSON data:", error));
     }, []);
@@ -213,6 +212,7 @@ function App() {
                                 draggingCard={draggingCard}
                                 queryCourses={queryCourses}
                                 setQueryCourses={setQueryCourses}
+                                
                             />
                         }
                         right={
@@ -223,12 +223,13 @@ function App() {
                                 courseList={groupedCourses}
                                 queryCourses={queryCourses}
                                 setQueryCourses={setQueryCourses}
+                                userInfo={currentUserInfo}
                             />
                         }
                     />
                 </Content>
             </Layout>
-        </div>
+        </div>  
     );
 }
 
