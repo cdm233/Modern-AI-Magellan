@@ -48,7 +48,7 @@ jobs:
                   username: ${{ secrets.EC2_USER }}
                   key: ${{ secrets.EC2_KEY }}
                   script: |
-                    sudo rsync -av --delete /home/ubuntu/tmp_build/${{ github.sha }}/ /home/ubuntu/capstone/frontend/
+                    sudo rsync -av --delete /home/ubuntu/tmp_build/${{ github.sha }}/ /home/ubuntu/capstone/
                     sudo chown -R www-data:www-data /home/ubuntu/capstone/frontend/
 
             # Step 7: Copy backend files to a temporary directory on EC2
@@ -58,8 +58,7 @@ jobs:
                   host: ${{ secrets.EC2_HOST }}
                   username: ${{ secrets.EC2_USER }}
                   key: ${{ secrets.EC2_KEY }}
-                  source: |
-                    backend/**
+                  source: "backend/*"
                   target: "/home/ubuntu/tmp_backend/${{ github.sha }}"
                   overwrite: true
 
@@ -80,7 +79,7 @@ jobs:
                   username: ${{ secrets.EC2_USER }}
                   key: ${{ secrets.EC2_KEY }}
                   script: |
-                    sudo rsync -av --delete /home/ubuntu/tmp_backend/${{ github.sha }}/ /home/ubuntu/capstone/backend/
+                    sudo rsync -av --delete /home/ubuntu/tmp_backend/${{ github.sha }}/ /home/ubuntu/capstone/
                     sudo chown -R ubuntu:ubuntu /home/ubuntu/capstone/backend/
 
             # Step 10: Activate virtual environment and install dependencies
