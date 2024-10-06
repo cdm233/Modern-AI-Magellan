@@ -39,6 +39,7 @@ jobs:
                   key: ${{ secrets.EC2_KEY }}
                   source: "frontend/build/*" # Point to the build directory in the frontend folder
                   target: "/home/ubuntu/tmp_build/${{ github.sha }}" # Temporary directory to store files
+                  strip_components: 1
                   overwrite: true
 
             - name: Deploy frontend on EC2
@@ -61,6 +62,7 @@ jobs:
                   key: ${{ secrets.EC2_KEY }}
                   source: "backend/**"
                   target: "/home/ubuntu/tmp_backend/${{ github.sha }}"
+                  strip_components: 1
                   overwrite: true
 
             # Step 8: Stop the Django application server
