@@ -351,7 +351,7 @@ const ChatInterface = ({ chatHistory, setChatHistory, draggingCourse, courseList
                                     width: "130px",
                                     height: "60px",
                                     marginRight: "5px",
-                                    color: item["course_status"] === 0 ? "black" : "#f90",
+                                    color: item["status"] === 0 ? "black" : "#f90",
                                     cursor: 'default'
 
                                 }}
@@ -362,12 +362,12 @@ const ChatInterface = ({ chatHistory, setChatHistory, draggingCourse, courseList
                                         fontSize: 14,
                                         fontFamily: "arial",
                                         textDecoration: "none",
-                                        color: item["course_status"] === 0 ? "black" : "#f90",
+                                        color: item["status"] === 0 ? "black" : "#f90",
                                         fontWeight: "bold",
                                     }}
                                     className="CourseCardFamily CourseCardCode"
                                 >
-                                    {item["course_code"]}
+                                    {item["code"]}
                                 </span>
 
                                 <div
@@ -378,7 +378,7 @@ const ChatInterface = ({ chatHistory, setChatHistory, draggingCourse, courseList
                                     }}
                                     className="CourseCardFamily CourseCardName"
                                 >
-                                    {item["course_name"]}
+                                    {item["name"]}
                                 </div>
                             </div>
                         </div>

@@ -17,7 +17,7 @@ function handleAskAssistant(record, target, queryCourses, setQueryCourses) {
     console.log(record, target, queryCourses);
 
     for(var course of record.term_courses){
-        if(course['course_code'] === target){
+        if(course['code'] === target){
             if(queryCourses){
                 setQueryCourses([
                     ...new Set([
@@ -35,7 +35,7 @@ function handleAskAssistant(record, target, queryCourses, setQueryCourses) {
 function handleGetCourseDetails(record, target) {
     console.log("Get Details");
     for(var course of record.term_courses){
-        if(course['course_code'] === target){
+        if(course['code'] === target){
             console.log(course);
         }
     }
@@ -78,7 +78,7 @@ const OnEmptyPopup = ({ record, target, visible, x, y }) =>
             console.log("Edit Course");
             
             for (let course of record.term_courses) {
-                if (course['course_code'] === target) {
+                if (course['code'] === target) {
                     setCurrentCourse(course);
                     setModelOpen(true);
                     break;
@@ -117,7 +117,7 @@ const OnEmptyPopup = ({ record, target, visible, x, y }) =>
             
                     let term_course_index = 0;
                     for (; term_course_index < prevState[term_row_index]["term_courses"].length; term_course_index++) {
-                        if (prevState[term_row_index]["term_courses"][term_course_index]["course_code"] === currentCourse.course_code) {
+                        if (prevState[term_row_index]["term_courses"][term_course_index]["code"] === currentCourse.code) {
                             break;
                         }
                     }

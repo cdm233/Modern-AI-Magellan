@@ -37,17 +37,22 @@ const format_course_data_source = (groupedCourses) => {
         for (var i = 0; i < maxCourseCount; i++) {
             if (i < courses.length) {
                 curTermCourseList.push({
-                    course_name: courses[i]["course_name"],
-                    course_code: courses[i]["course_code"],
-                    course_status: courses[i]["course_status"],
-                    course_term: courses[i]["course_term"],
+                    name: courses[i]["name"],
+                    code: courses[i]["code"],
+                    status: courses[i]["status"],
+                    term: courses[i]["term"],
+                    Math: courses[i]['math_ceab'],
+                    NS: courses[i]['ns_ceab'],
+                    CS: courses[i]['cs_ceab'],
+                    ES: courses[i]['es_ceab'],
+                    ED: courses[i]['ed_ceab'],
                 });
             }
         }
 
         formattedDataSource.push({
             key: `${term}`,
-            term_name: term,
+            term_name: Number(term),
             term_courses: curTermCourseList,
         });
     }

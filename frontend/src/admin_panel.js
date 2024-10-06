@@ -1,0 +1,268 @@
+import { Input, Button, Space, Collapse, List, Typography, Flex, Popconfirm, message, Upload, Switch, Divider } from "antd";
+import { useState } from "react";
+import CryptoJS from "crypto-js";
+import { InboxOutlined } from "@ant-design/icons";
+
+const AdminPanelContent = () => {
+    // List of features:
+    //  * Add a user
+    //  * Get database status
+    //  * Modify a course
+    //  * Delete all courses
+    //  * Delete a specific course
+    //  * Modify a user information
+    //  * Get a user
+    //  * Delete all users
+    //  * Delete a specific user
+
+    const text = "hey";
+    const [db_stats, setDB_stats] = useState([
+        "Racing car sprays burning fuel into crowd.",
+        "Japanese princess to wed commoner.",
+        "Australian walks 100km after outback crash.",
+        "Man charged over missing wedding girl.",
+        "Los Angeles battles huge wildfires.",
+    ]);
+
+    const [dummyUserInfo, setDummyUserInfo] = useState({
+        "name": "",
+        "email": "",
+        "number": "",
+        "gender": "",
+        "program": "",
+
+        // Authentication
+        "utorid": "",
+        "password": ""
+    });
+
+    function getDatabaseStats() {
+        setDB_stats(["Database statistics is now refreshed."]);
+    }
+
+    function deleteAllCourses() {
+        message.success("All courses deleted from the Database.");
+    }
+
+    function deleteAllUsers() {
+        message.success("All users deleted from the Database.");
+    }
+
+    const userUploadProps = {
+        name: "file",
+
+        multiple: true,
+        action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+        headers: {
+            authorization: "authorization-text",
+        },
+        onChange(info) {
+            if (info.file.status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === "done") {
+                message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === "error") {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+    };
+
+    function handleInputChange(key, newValue) {
+        setDummyUserInfo(prevCourse => ({
+            ...prevCourse,
+            [key]: newValue
+        }));
+    }
+
+    const adminItems = [
+        {
+            key: "add_user",
+            label: "Add a User",
+            children: (
+                <div>
+                    {Object.entries(dummyUserInfo).map(([key, value]) => (
+                        <Flex align="center" justify="left" style={{ marginTop: "5px" }}>
+                            <span style={{ width: '10%' }}>{key}:</span>
+                            <Input
+                                value={value}
+                                onChange={(event) => handleInputChange(key, event.target.value)}
+                            />
+                        </Flex>
+                    ))}
+
+                    <Divider>OR Upload User File Directly</Divider>
+
+                    <Upload.Dragger {...userUploadProps}>
+                        <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                        </p>
+                        <p className="ant-upload-text">Click or drag user files to this area to upload</p>
+                        <p className="ant-upload-hint">Support for a single user file or bulk upload. Legal users will be created.</p>
+                    </Upload.Dragger>
+                    
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '15px'}}>
+                        <Button type="primary" onClick={()=>{
+                            console.log(dummyUserInfo);
+                            message.success('User created!')
+                        }}>Upload</Button>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            key: "get_db_stats",
+            label: "Get Database Statistics",
+            children: (
+                <div>
+                    <List
+                        header={
+                            <Flex align="center" justify="space-between">
+                                <Typography.Title level={2}>Database Statistics</Typography.Title>{" "}
+                                <Button onClick={getDatabaseStats}>Refresh</Button>{" "}
+                            </Flex>
+                        }
+                        bordered
+                        dataSource={db_stats}
+                        renderItem={(item) => <List.Item>{item}</List.Item>}
+                    />
+                </div>
+            ),
+        },
+        {
+            key: "query_course",
+            label: "Query a Course",
+            children: <p>{text}</p>,
+        },
+        {
+            key: "modify_course",
+            label: "Modify a Course",
+            children: <p>{text}</p>,
+        },
+        {
+            key: "delete_all_course",
+            label: "Delete All Courses",
+            children: (
+                <Popconfirm
+                    title="Delete All Courses"
+                    description="Are you sure to perform this action?"
+                    okText="Yes"
+                    cancelText="No"
+                    placement="right"
+                    onConfirm={(e) => {
+                        console.log(e);
+                        deleteAllCourses();
+                    }}
+                >
+                    <Button danger type="primary">
+                        Delete All Courses
+                    </Button>
+                </Popconfirm>
+            ),
+        },
+        {
+            key: "delete_course",
+            label: "Delete a course",
+            children: <p>{text}</p>,
+        },
+        {
+            key: "query_user",
+            label: "Query a User",
+            children: <p>{text}</p>,
+        },
+        {
+            key: "modify_user",
+            label: "Modify a User",
+            children: <p>{text}</p>,
+        },
+        {
+            key: "delete_all_user",
+            label: "Delete All Users",
+            children: (
+                <Popconfirm
+                    title="Delete All Users"
+                    description="Are you sure to perform this action?"
+                    okText="Yes"
+                    cancelText="No"
+                    placement="right"
+                    onConfirm={(e) => {
+                        console.log(e);
+                        deleteAllUsers();
+                    }}
+                >
+                    <Button danger type="primary">
+                        Delete All Users
+                    </Button>
+                </Popconfirm>
+            ),
+        },
+        {
+            key: "delete_user",
+            label: "Delete a User",
+            children: <p>{text}</p>,
+        },
+    ];
+
+    return (
+        <div style={{ padding: "12px" }}>
+            <h1>Admin Panel</h1>
+
+            <Collapse
+                items={adminItems}
+                defaultActiveKey={["add_user"]}
+                onChange={(a, b, c) => {
+                    console.log(a, b, c);
+                }}
+            />
+        </div>
+    );
+};
+
+const AdminPanel = () => {
+    const [adminLogin, setAdminLogin] = useState(false);
+    const [loginInputValue, setLoginInputValue] = useState("");
+    const hardcodedHash = "0d544a847a0c1409436d076af031a03957d5661254a4497fa6d3f2035c6f68b3";
+
+    function admin_login(loginInputValue) {
+        const hashedPassword = CryptoJS.SHA256(loginInputValue).toString();
+        if (hashedPassword === hardcodedHash) {
+            setAdminLogin(true);
+        } else {
+            alert("Login credential is not correct!");
+        }
+    }
+
+    return (
+        <>
+            {adminLogin ? (
+                <AdminPanelContent></AdminPanelContent>
+            ) : (
+                <div>
+                    <h1>Admin Panel Log in</h1>
+                    <Space.Compact style={{ width: "100%" }}>
+                        <Input.Password
+                            value={loginInputValue}
+                            onChange={(event) => {
+                                setLoginInputValue(event.target.value);
+                            }}
+                            onPressEnter={() => {
+                                admin_login(loginInputValue);
+                            }}
+                        />
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                admin_login(loginInputValue);
+                            }}
+                            style={{ height: 40 }}
+                        >
+                            Login
+                        </Button>
+                    </Space.Compact>
+                </div>
+            )}
+        </>
+    );
+};
+
+export default AdminPanel;

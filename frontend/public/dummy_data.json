@@ -4,295 +4,296 @@
     "Email": "demeng.chen@mail.utoronto.ca",
     "Alternative Email": "demeng.chen@mail.utoronto.ca",
     "Gender": "Male",
+    "PEY": false,
     "Degree Post": "AECPEBASC",
     "schedule": [
         {
-            "course_term": "20209",
-            "course_code": "APS100H1 F",
-            "course_name": "Orientation to Engineering",
-            "course_status": 2
+            "term": "20209",
+            "code": "APS100H1 F",
+            "name": "Orientation to Engineering",
+            "status": 2
         },
         {
-            "course_term": "20209",
-            "course_code": "APS110H1 F",
-            "course_name": "Engineering Chemistry and Materials Science",
-            "course_status": 0
+            "term": "20209",
+            "code": "APS110H1 F",
+            "name": "Engineering Chemistry and Materials Science",
+            "status": 0
         },
         {
-            "course_term": "20209",
-            "course_code": "APS111H1 F",
-            "course_name": "Engineering Strategies & Practice I",
-            "course_status": 0
+            "term": "20209",
+            "code": "APS111H1 F",
+            "name": "Engineering Strategies & Practice I",
+            "status": 0
         },
         {
-            "course_term": "20209",
-            "course_code": "CIV100H1 F",
-            "course_name": "Mechanics",
-            "course_status": 0
+            "term": "20209",
+            "code": "CIV100H1 F",
+            "name": "Mechanics",
+            "status": 0
         },
         {
-            "course_term": "20209",
-            "course_code": "MAT186H1 F",
-            "course_name": "Calculus I",
-            "course_status": 0
+            "term": "20209",
+            "code": "MAT186H1 F",
+            "name": "Calculus I",
+            "status": 0
         },
         {
-            "course_term": "20209",
-            "course_code": "MAT188H1 F",
-            "course_name": "Linear Algebra",
-            "course_status": 0
+            "term": "20209",
+            "code": "MAT188H1 F",
+            "name": "Linear Algebra",
+            "status": 0
         },
         {
-            "course_term": "20211",
-            "course_code": "APS105H1 S",
-            "course_name": "Computer Fundamentals",
-            "course_status": 0
+            "term": "20211",
+            "code": "APS105H1 S",
+            "name": "Computer Fundamentals",
+            "status": 0
         },
         {
-            "course_term": "20211",
-            "course_code": "APS112H1 S",
-            "course_name": "Engineering Strategies & Practice II",
-            "course_status": 0
+            "term": "20211",
+            "code": "APS112H1 S",
+            "name": "Engineering Strategies & Practice II",
+            "status": 0
         },
         {
-            "course_term": "20211",
-            "course_code": "ECE110H1 S",
-            "course_name": "Electrical Fundamentals",
-            "course_status": 0
+            "term": "20211",
+            "code": "ECE110H1 S",
+            "name": "Electrical Fundamentals",
+            "status": 0
         },
         {
-            "course_term": "20211",
-            "course_code": "ECE191H1 S",
-            "course_name": "Introduction to Electrical and Computer Engineering",
-            "course_status": 0
+            "term": "20211",
+            "code": "ECE191H1 S",
+            "name": "Introduction to Electrical and Computer Engineering",
+            "status": 0
         },
         {
-            "course_term": "20211",
-            "course_code": "MAT187H1 S",
-            "course_name": "Calculus II",
-            "course_status": 0
+            "term": "20211",
+            "code": "MAT187H1 S",
+            "name": "Calculus II",
+            "status": 0
         },
         {
-            "course_term": "20211",
-            "course_code": "MIE100H1 S",
-            "course_name": "Dynamics",
-            "course_status": 0
+            "term": "20211",
+            "code": "MIE100H1 S",
+            "name": "Dynamics",
+            "status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "ECE201H1 F",
-            "course_name": "Seminar Course: Electrical and Computer Engineering",
-            "course_status": 0
+            "term": "20219",
+            "code": "ECE201H1 F",
+            "name": "Seminar Course: Electrical and Computer Engineering",
+            "status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "ECE212H1 F",
-            "course_name": "Circuit Analysis",
-            "course_status": 0
+            "term": "20219",
+            "code": "ECE212H1 F",
+            "name": "Circuit Analysis",
+            "status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "ECE241H1 F",
-            "course_name": "Digital Systems",
-            "course_status": 0
+            "term": "20219",
+            "code": "ECE241H1 F",
+            "name": "Digital Systems",
+            "status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "ECE244H1 F",
-            "course_name": "Programming Fundamentals",
-            "course_status": 0
+            "term": "20219",
+            "code": "ECE244H1 F",
+            "name": "Programming Fundamentals",
+            "status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "MAT290H1 F",
-            "course_name": "Advanced Engineering Mathematics",
-            "course_status": 0
+            "term": "20219",
+            "code": "MAT290H1 F",
+            "name": "Advanced Engineering Mathematics",
+            "status": 0
         },
         {
-            "course_term": "20219",
-            "course_code": "MAT291H1 F",
-            "course_name": "Calculus III",
-            "course_status": 0
+            "term": "20219",
+            "code": "MAT291H1 F",
+            "name": "Calculus III",
+            "status": 0
         },
         {
-            "course_term": "20221",
-            "course_code": "ECE216H1 S",
-            "course_name": "Signals and Systems",
-            "course_status": 0
+            "term": "20221",
+            "code": "ECE216H1 S",
+            "name": "Signals and Systems",
+            "status": 0
         },
         {
-            "course_term": "20221",
-            "course_code": "ECE221H1 S",
-            "course_name": "Electric and Magnetic Fields",
-            "course_status": 0
+            "term": "20221",
+            "code": "ECE221H1 S",
+            "name": "Electric and Magnetic Fields",
+            "status": 0
         },
         {
-            "course_term": "20221",
-            "course_code": "ECE231H1 S",
-            "course_name": "Introductory Electronics",
-            "course_status": 0
+            "term": "20221",
+            "code": "ECE231H1 S",
+            "name": "Introductory Electronics",
+            "status": 0
         },
         {
-            "course_term": "20221",
-            "course_code": "ECE243H1 S",
-            "course_name": "Computer Organization",
-            "course_status": 0
+            "term": "20221",
+            "code": "ECE243H1 S",
+            "name": "Computer Organization",
+            "status": 0
         },
         {
-            "course_term": "20221",
-            "course_code": "ECE297H1 S",
-            "course_name": "Communication and Design",
-            "course_status": 0
+            "term": "20221",
+            "code": "ECE297H1 S",
+            "name": "Communication and Design",
+            "status": 0
         },
         {
-            "course_term": "20225",
-            "course_code": "APS360H1 Y",
-            "course_name": "Applied Fundamentals of Deep Learning",
-            "course_status": 0
+            "term": "20225",
+            "code": "APS360H1 Y",
+            "name": "Applied Fundamentals of Deep Learning",
+            "status": 0
         },
         {
-            "course_term": "20225",
-            "course_code": "JRE300H1 F",
-            "course_name": "Fundamentals of Accounting and Finance",
-            "course_status": 0
+            "term": "20225",
+            "code": "JRE300H1 F",
+            "name": "Fundamentals of Accounting and Finance",
+            "status": 0
         },
         {
-            "course_term": "20229",
-            "course_code": "CSC317H1 F",
-            "course_name": "Computer Graphics (Formerly CSC418H1)",
-            "course_status": 0
+            "term": "20229",
+            "code": "CSC317H1 F",
+            "name": "Computer Graphics (Formerly CSC418H1)",
+            "status": 0
         },
         {
-            "course_term": "20229",
-            "course_code": "ECE302H1 F",
-            "course_name": "Probability and Applications",
-            "course_status": 0
+            "term": "20229",
+            "code": "ECE302H1 F",
+            "name": "Probability and Applications",
+            "status": 0
         },
         {
-            "course_term": "20229",
-            "course_code": "ECE326H1 F",
-            "course_name": "Programming Languages (formerly CSC326H1)",
-            "course_status": 0
+            "term": "20229",
+            "code": "ECE326H1 F",
+            "name": "Programming Languages (formerly CSC326H1)",
+            "status": 0
         },
         {
-            "course_term": "20229",
-            "course_code": "ECE345H1 F",
-            "course_name": "Algorithms & Data Structures",
-            "course_status": 0
+            "term": "20229",
+            "code": "ECE345H1 F",
+            "name": "Algorithms & Data Structures",
+            "status": 0
         },
         {
-            "course_term": "20229",
-            "course_code": "ECE361H1 F",
-            "course_name": "Computer Networks I",
-            "course_status": 0
+            "term": "20229",
+            "code": "ECE361H1 F",
+            "name": "Computer Networks I",
+            "status": 0
         },
         {
-            "course_term": "20231",
-            "course_code": "ECE311H1 S",
-            "course_name": "Introduction to Control Systems",
-            "course_status": 0
+            "term": "20231",
+            "code": "ECE311H1 S",
+            "name": "Introduction to Control Systems",
+            "status": 0
         },
         {
-            "course_term": "20231",
-            "course_code": "ECE344H1 S",
-            "course_name": "Operating Systems",
-            "course_status": 0
+            "term": "20231",
+            "code": "ECE344H1 S",
+            "name": "Operating Systems",
+            "status": 0
         },
         {
-            "course_term": "20231",
-            "course_code": "ECE421H1 S",
-            "course_name": "Introduction to Machine Learning",
-            "course_status": 0
+            "term": "20231",
+            "code": "ECE421H1 S",
+            "name": "Introduction to Machine Learning",
+            "status": 0
         },
         {
-            "course_term": "20231",
-            "course_code": "ECE472H1 S",
-            "course_name": "Engineering Economic Analysis & Entrepreneurship",
-            "course_status": 0
+            "term": "20231",
+            "code": "ECE472H1 S",
+            "name": "Engineering Economic Analysis & Entrepreneurship",
+            "status": 0
         },
         {
-            "course_term": "20235",
-            "course_code": "PEY400Y1 Y",
-            "course_name": "",
-            "course_status": 1
+            "term": "20235",
+            "code": "PEY400Y1 Y",
+            "name": "",
+            "status": 1
         },
         {
-            "course_term": "20239",
-            "course_code": "PEY400Y1 Y",
-            "course_name": "",
-            "course_status": 1
+            "term": "20239",
+            "code": "PEY400Y1 Y",
+            "name": "",
+            "status": 1
         },
         {
-            "course_term": "20241",
-            "course_code": "PEY400Y1 Y",
-            "course_name": "",
-            "course_status": 1
+            "term": "20241",
+            "code": "PEY400Y1 Y",
+            "name": "",
+            "status": 1
         },
         {
-            "course_term": "20245",
-            "course_code": "JRE410H1 F",
-            "course_name": "Markets and Competitive Strategy",
-            "course_status": 1
+            "term": "20245",
+            "code": "JRE410H1 F",
+            "name": "Markets and Competitive Strategy",
+            "status": 1
         },
         {
-            "course_term": "20249",
-            "course_code": "CLA204H1 F",
-            "course_name": "Intro to Classical Mythology",
-            "course_status": 1
+            "term": "20249",
+            "code": "CLA204H1 F",
+            "name": "Intro to Classical Mythology",
+            "status": 1
         },
         {
-            "course_term": "20249",
-            "course_code": "CSC384H1 F",
-            "course_name": "Introduction to Artificial Intelligence",
-            "course_status": 1
+            "term": "20249",
+            "code": "CSC384H1 F",
+            "name": "Introduction to Artificial Intelligence",
+            "status": 1
         },
         {
-            "course_term": "20249",
-            "course_code": "ECE454H1 F",
-            "course_name": "Computer Systems Programming",
-            "course_status": 1
+            "term": "20249",
+            "code": "ECE454H1 F",
+            "name": "Computer Systems Programming",
+            "status": 1
         },
         {
-            "course_term": "20249",
-            "course_code": "ECE496Y1 Y",
-            "course_name": "Design Project",
-            "course_status": 1
+            "term": "20249",
+            "code": "ECE496Y1 Y",
+            "name": "Design Project",
+            "status": 1
         },
         {
-            "course_term": "20249",
-            "course_code": "JRE410H1 F",
-            "course_name": "Markets and Competitive Strategy",
-            "course_status": 1
+            "term": "20249",
+            "code": "JRE410H1 F",
+            "name": "Markets and Competitive Strategy",
+            "status": 1
         },
         {
-            "course_term": "20251",
-            "course_code": "ECE496Y1 Y",
-            "course_name": "Design Project",
-            "course_status": 1
+            "term": "20251",
+            "code": "ECE496Y1 Y",
+            "name": "Design Project",
+            "status": 1
         },
         {
-            "course_term": "20251",
-            "course_code": "CSC401H1F S",
-            "course_name": "",
-            "course_status": 1
+            "term": "20251",
+            "code": "CSC401H1F S",
+            "name": "",
+            "status": 1
         },
         {
-            "course_term": "20251",
-            "course_code": "ECE318H1 S",
-            "course_name": "Fundamentals of Optics",
-            "course_status": 1
+            "term": "20251",
+            "code": "ECE318H1 S",
+            "name": "Fundamentals of Optics",
+            "status": 1
         },
         {
-            "course_term": "20251",
-            "course_code": "ECE462H1 S",
-            "course_name": "Multimedia Systems",
-            "course_status": 1
+            "term": "20251",
+            "code": "ECE462H1 S",
+            "name": "Multimedia Systems",
+            "status": 1
         },
         {
-            "course_term": "20251",
-            "course_code": "LIN102H1 S",
-            "course_name": "Introduction to Linguistics: Sentence Structure and Meaning (Formerly LIN100Y1)",
-            "course_status": 1
+            "term": "20251",
+            "code": "LIN102H1 S",
+            "name": "Introduction to Linguistics: Sentence Structure and Meaning (Formerly LIN100Y1)",
+            "status": 1
         }
     ]
 }

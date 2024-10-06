@@ -1,5 +1,5 @@
 function get_student_data(){
-    function get_course_status(node_style){
+    function get_status(node_style){
         var node_color = node_style['color']
 
         if (node_color === 'rgb(0, 0, 0)' || node_color === ''){
@@ -39,16 +39,16 @@ function get_student_data(){
         var courses = Array.from(term_row.children)
         
         for(td of courses.slice(1)){
-            var course_code = td.innerText.split('\n')[0    ]
-            var course_name = td.innerText.split('\n')[1]
+            var code = td.innerText.split('\n')[0    ]
+            var name = td.innerText.split('\n')[1]
     
             const element_style = td.style.color === '' ? td.getElementsByTagName('a')[0].style : td.style;
             
             schedule_data.push({
-                "course_term": cur_term,
-                "course_code": course_code,
-                "course_name": course_name,
-                "course_status": get_course_status(element_style)
+                "term": cur_term,
+                "code": code,
+                "name": name,
+                "status": get_status(element_style)
             })
         }
     }

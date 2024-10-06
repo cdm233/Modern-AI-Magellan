@@ -3,11 +3,14 @@ import MainSplitPanelsTwoSides from "./resizablePanels.js";
 import CourseTable from "./userCourseList.js";
 import ChatInterface from "./chatInterface.js";
 import "./App.css";
-import { Space, Layout, Dropdown } from "antd";
+import { Space, Layout, Dropdown, Typography } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 const { Header, Content } = Layout;
+const { Title } = Typography;
 
 const groupByTerm = (courses) => {
     if (!Array.isArray(courses)) {
@@ -15,10 +18,10 @@ const groupByTerm = (courses) => {
     }
 
     return courses.reduce((acc, course) => {
-        if (!acc[course.course_term]) {
-            acc[course.course_term] = [];
+        if (!acc[course.term]) {
+            acc[course.term] = [];
         }
-        acc[course.course_term].push(course);
+        acc[course.term].push(course);
         return acc;
     }, {});
 };
@@ -28,13 +31,15 @@ function signOut() {
 }
 
 function App() {
+    const navigate = useNavigate();
+
     const [current_user_course_list, set_current_user_course_list] = useState([]);
     const [currentUserInfo, setCurrentUserInfo] = useState({
         "student_number": 1006751267,
-        "student_name": "Demeng Chen",
-        "student_email": "demeng.chen@mail.utoronto.ca",
-        "student_degree": "AECPEBASC",
-        "student_gender": "Male"
+        "name": "Demeng Chen",
+        "email": "demeng.chen@mail.utoronto.ca",
+        "degree": "AECPEBASC",
+        "gender": "Male"
     });
 
     const [groupedCourses, setGroupedCourses] = useState({});
@@ -65,7 +70,7 @@ function App() {
 
     useEffect(() => {
         // Fetch the JSON file from the public folder
-        axios.post('http://localhost:8000/api/user', {
+        axios.post('http://localhost:8000/api/', {
             request: 'get_user_info',
             payload: {
                 utorid: 'wangw362', 
@@ -74,10 +79,11 @@ function App() {
             const userInfo = response.data;
             console.log(userInfo);
 
-            // setCurrentUserInfo({
-            //     ...userInfo,
-            //     "student_initial": userInfo.student_name.split(' ').map((i)=>(i[0].toUpperCase()))
-            // });
+            setCurrentUserInfo({
+                ...userInfo,
+                "student_initial": userInfo.name.split(' ').map((i)=>(i[0].toUpperCase()))
+            });
+            set_current_user_course_list(userInfo.courses);
             // set_current_user_course_list(JSON.parse(userInfo.courseList));
         }).catch(error => {
             if (error.response) {
@@ -127,7 +133,7 @@ function App() {
         {
             label: (
                 <p className="UserInfoRow">
-                    <strong>Student Email: </strong> {currentUserInfo.student_email}
+                    <strong>Student Email: </strong> {currentUserInfo.email}
                 </p>
             ),
             key: "1",
@@ -138,7 +144,7 @@ function App() {
         {
             label: (
                 <p className="UserInfoRow">
-                    <strong>Student Gender: </strong> {currentUserInfo.student_gender}
+                    <strong>Student Gender: </strong> {currentUserInfo.gender}
                 </p>
             ),
             key: "2",
@@ -150,7 +156,7 @@ function App() {
             label: (
                 <p className="UserInfoRow">
                     <strong>Degree Post: </strong>
-                    <span>{currentUserInfo.student_degree}</span>
+                    <span>{currentUserInfo.degree}</span>
                 </p>
             ),
             key: "3",
@@ -173,7 +179,7 @@ function App() {
         <div className="App" style={{ padding: "5px"}}>
             <Layout>
                 <Header className="AppHeader">
-                    <strong style={{ fontSize: "20pt" }}>ECE496 Capstone Project - Smartgellan </strong>
+                    <strong style={{ fontSize: "20pt", cursor: 'pointer' }} onClick={()=>{navigate('/')}}>ECE496 Capstone Project - Smartgellan </strong>
 
                     <div
                         style={{
@@ -184,7 +190,7 @@ function App() {
                         }}
                     >
                         <div className="UserAvatar" style={{ marginRight: "10px" }}>
-                        {currentUserInfo.student_name.split(' ').map((i)=>(i[0].toUpperCase()))}
+                        {currentUserInfo.name.split(' ').map((i)=>(i[0].toUpperCase()))}
                         </div>
                         <Dropdown
                             menu={{
@@ -193,9 +199,11 @@ function App() {
                             trigger={["click"]}
                             placement="bottomRight"
                             arrow
+                            // width={'500px'}
+                            style={{width: '500px'}}
                         >
                             <Space>
-                                <strong style={{ cursor: "pointer" }}>{currentUserInfo.student_name}</strong>
+                                <strong style={{ cursor: "pointer" }}>{currentUserInfo.name}</strong>
                                 <DownOutlined style={{ cursor: "pointer" }} />
                             </Space>
                         </Dropdown>

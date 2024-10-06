@@ -1,6 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Col, Row, Table, Divider, Button, ConfigProvider, Modal, Popover, Tabs, Input, Alert, Checkbox, Flex, Typography, List } from "antd";
-import { SearchOutlined, QuestionCircleTwoTone, CloseOutlined } from "@ant-design/icons";
+import {
+    Col,
+    Row,
+    Table,
+    Divider,
+    Button,
+    ConfigProvider,
+    Modal,
+    Popover,
+    Tabs,
+    Input,
+    Alert,
+    Checkbox,
+    message,
+    Typography, 
+    List,
+} from "antd";
+import { SearchOutlined, QuestionCircleTwoTone, CloseOutlined, DashOutlined, MinusOutlined } from "@ant-design/icons";
 import { OnEmptyPopup, OnCardPopup } from "./menuPopUp";
 import { format_course_data_source, alphanumerical } from "./utils";
 import axios from "axios";
@@ -9,10 +25,10 @@ import { Link } from "react-router-dom";
 
 // Model of a course
 const dummy_course = {
-    course_term: "20239",
-    course_code: "PEY400Y1 Y",
-    course_name: "",
-    course_status: 1,
+    term: "20239",
+    code: "PEY400Y1 Y",
+    name: "",
+    status: 1,
     ceab: {
         ES: 12,
         // ...
@@ -105,6 +121,16 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
     const documentRef = useRef(document);
     const tableRef = useRef(null);
 
+    // const [courseActionHistory, setCourseActionHistory] = useState([]);
+
+    const courseActionHistory = useRef([]);
+
+    const setCourseActionHistory = (newData)=>{
+        courseActionHistory.current = [...newData];
+    }
+
+    const courseActionStep = useRef(0);
+
     const [formattedCourseData, setFormattedCourseData] = useState([]);
 
     const [graduationCheckList, setGraduationCheckList] = useState([]);
@@ -115,9 +141,9 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         setFormattedCourseData(formattedData);
     }, [groupedCourses]);
 
-    const getGraduationCheckList = ()=>{
+    const getGraduationCheckList = () => {
         const all_checks = [
-            ()=>{
+            () => {
                 const success_text = "All required core years courses were taken and passed!";
                 const fail_text = "Some required core years courses were not taken or passed!";
 
@@ -127,7 +153,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
                 return [success, return_text];
             },
-            ()=>{
+            () => {
                 const success_text = "All required core years courses were taken and passed!";
                 const fail_text = "Some required core years courses were not taken or passed!";
 
@@ -137,7 +163,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
                 return [success, return_text];
             },
-            ()=>{
+            () => {
                 const success_text = "All required core years courses were taken and passed!";
                 const fail_text = "Some required core years courses were not taken or passed!";
 
@@ -147,7 +173,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
                 return [success, return_text];
             },
-            ()=>{
+            () => {
                 const success_text = "All required core years courses were taken and passed!";
                 const fail_text = "Some required core years courses were not taken or passed!";
 
@@ -157,7 +183,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
                 return [success, return_text];
             },
-            ()=>{
+            () => {
                 const success_text = "All required core years courses were taken and passed!";
                 const fail_text = "Some required core years courses were not taken or passed!";
 
@@ -171,53 +197,34 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
         const return_list = [];
 
-        for(const check of all_checks){
+        for (const check of all_checks) {
             const [cur_check_passed, text] = check();
-            
+
             return_list.push({
-                'status': cur_check_passed,
-                'text': text
-            })
+                status: cur_check_passed,
+                text: text,
+            });
         }
 
         return return_list;
-    }
+    };
 
-    useEffect(()=>{
+    useEffect(() => {
         setGraduationCheckList(getGraduationCheckList());
     }, [formattedCourseData]);
 
     const calculateCEABData = () => {
-        console.log("Recalculate CEAB");
+        // console.log("Recalculate CEAB");
 
         if (formattedCourseData.length === 0) {
             return;
         }
 
-        // console.log(formattedCourseData);
+        const dummyCEABDetails = JSON.parse(JSON.stringify(ceab_default_data));
 
-        // course.Math
-        // course.NS
-        // (course.NS + course.Math)
-        // course.ES
-        // course.ED
-        // (course.ES + course.ED)
-        // course.CS
-        // (course.Math + course.NS + course.CS + course.ES + course.ED)
-
-        var dummyCEABDetails = [...ceab_default_data];
         for (const term of formattedCourseData) {
             for (const course of term.term_courses) {
-                if (course.course_status === 0) {
-                    dummyCEABDetails[1]["obtained"] += course.Math || 0;
-                    dummyCEABDetails[2]["obtained"] += course.NS || 0;
-                    dummyCEABDetails[3]["obtained"] += course.NS + course.Math || 0;
-                    dummyCEABDetails[4]["obtained"] += course.ES || 0;
-                    dummyCEABDetails[5]["obtained"] += course.ED || 0;
-                    dummyCEABDetails[6]["obtained"] += course.ES + course.ED || 0;
-                    dummyCEABDetails[7]["obtained"] += course.CS || 0;
-                    dummyCEABDetails[0]["obtained"] += course.Math + course.NS + course.CS + course.ES + course.ED || 0;
-                } else if (course.course_status === 1) {
+                if(course.status !== 2){
                     dummyCEABDetails[1]["projected"] += course.Math || 0;
                     dummyCEABDetails[2]["projected"] += course.NS || 0;
                     dummyCEABDetails[3]["projected"] += course.NS + course.Math || 0;
@@ -227,6 +234,17 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                     dummyCEABDetails[7]["projected"] += course.CS || 0;
                     dummyCEABDetails[0]["projected"] += course.Math + course.NS + course.CS + course.ES + course.ED || 0;
                 }
+
+                if (course.status === 0) {
+                    dummyCEABDetails[1]["obtained"] += course.Math || 0;
+                    dummyCEABDetails[2]["obtained"] += course.NS || 0;
+                    dummyCEABDetails[3]["obtained"] += course.NS + course.Math || 0;
+                    dummyCEABDetails[4]["obtained"] += course.ES || 0;
+                    dummyCEABDetails[5]["obtained"] += course.ED || 0;
+                    dummyCEABDetails[6]["obtained"] += course.ES + course.ED || 0;
+                    dummyCEABDetails[7]["obtained"] += course.CS || 0;
+                    dummyCEABDetails[0]["obtained"] += course.Math + course.NS + course.CS + course.ES + course.ED || 0;
+                } 
             }
         }
 
@@ -267,15 +285,14 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         target: null,
     });
 
-    const [alertMessage, setAlertMessage] = useState(null);
     const [courseInfoModalOpen, setCourseInfoModalOpen] = useState(false);
 
     const [cardPopupListenerCreated, setCardPopupListenerCreated] = useState(false);
     const [emptyPopupListenerCreated, setEmptyPopupListenerCreated] = useState(false);
 
     const [currentCourseDetails, setCurrentCourseDetails] = useState({
-        course_name: "Operating Systems",
-        course_code: "ECE344H1",
+        name: "Operating Systems",
+        code: "ECE344H1",
         description:
             "Operating system structures, concurrency, synchronization, deadlock, CPU scheduling, memory management, file systems. The laboratory exercises will require implementation of part of an operating system.",
         // This could be ECE244H1 and/or ECE243H1, need a way to distinguish
@@ -304,13 +321,13 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
     const [CEABDetailsData, setCEABDetailsData] = useState(ceab_default_data);
 
     // Ensure user_course_data is an array before processing
-    if (groupedCourses === undefined || groupedCourses === null || Object.values(groupedCourses).length === 0) {
-        return <div>No data available</div>;
-    }
+    // if (groupedCourses === undefined || groupedCourses === null || Object.values(groupedCourses).length === 0) {
+    //     return <div>No data available</div>;
+    // }
 
     function showCourseInfoModal(course_info) {
-        // course_code, section, year
-        requestCourseDetails(course_info["course_code"], course_info["course_term"]);
+        // code, section, year
+        requestCourseDetails(course_info["code"], course_info["term"]);
         setCourseInfoModalOpen(true);
     }
 
@@ -326,18 +343,51 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
     // console.log(JSON.stringify(formattedCourseData));
     // console.log(maxCourseCount)
 
-    const requestCourseDetails = (course_code, course_term) => {
+    const requestCourseDetails = (code, term) => {
         axios
-            .post("http://localhost:8000/api/courses", {
-                request: "get_course_details",
+            .post("http://localhost:8000/api/", {
+                request: "get_course",
                 payload: {
-                    code: course_code,
-                    term: course_term,
+                    code: code,
                 },
             })
             .then((response) => {
                 console.log(response.data);
-                setCurrentCourseDetails(response.data);
+
+                // setCurrentCourseDetails(response.data);
+                const data = response.data;
+                setCurrentCourseDetails({
+                    name: data.name,
+                    code: data.code,
+                    description: data.description,  // This could be ECE244H1 and/or ECE243H1, need a way to distinguish
+                    prerequisites: ["ECE244H1", "ECE243H1"],
+                    corequisites: [],
+                    exclusions: ["ECE353H1 S"],
+            
+                    creditWeight: data.credit,
+            
+                    // 1, 2, 3, 4, 5, 6, 7(Science and Math)
+                    // Server responde with '123' (which means 1 and 2 and 3)
+                    area: 6,
+            
+                    // Kernel, Depth, HSS, CS, Free, None
+                    // ('K', 'Kernel'), ('D', 'Depth'), ('H', 'HSS'), ('C', 'CS'), ('F', 'Free'), ('O', 'Other'), 
+                    type: data.type,
+                    
+                    // Deprecated
+                    fall: true,
+                    winter: true,
+
+                    // "20249;20259;"
+                    offered: data.offered.split(';'),
+                    delivery: [data.lec, data.tut, data.pra],
+                    au_dist: [data.math_au, data.ns_au, data.cs_au, data.es_au, data.ed_au],
+                    ceab: [data.math_ceab, data.ns_ceab, data.cs_ceab, data.es_ceab, data.ed_ceab],
+            
+                    // Not Taken, Passed, Failed, In Progress, Planned
+                    // Deprecated
+                    status: "Not Taken",
+                });
             })
             .catch((error) => {
                 if (error.response) {
@@ -355,10 +405,10 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         }
 
         code = code.toLowerCase();
-
+        // console.log(formattedCourseData);
         for (const term of formattedCourseData) {
             for (const course of term.term_courses) {
-                if (course.course_code.toLowerCase().includes(code)) {
+                if (course.code.toLowerCase().includes(code)) {
                     return course;
                 }
             }
@@ -368,6 +418,8 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
     }
 
     function findCourseLocation(term, code) {
+        term = Number(term);
+
         var term_row_index = 0;
         var valid_term_row = false;
         for (; term_row_index < formattedCourseData.length; term_row_index++) {
@@ -379,17 +431,18 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
         if (!valid_term_row) {
             term_row_index = -1;
+            return [-1, -1];
         }
-
+        
         if (code === null) {
             return term_row_index;
         }
 
         var term_course_index = 0;
         var valid_course_index = false;
-
+        
         for (; term_course_index < formattedCourseData[term_row_index]["term_courses"].length; term_course_index++) {
-            if (formattedCourseData[term_row_index]["term_courses"][term_course_index]["course_code"] === code) {
+            if (formattedCourseData[term_row_index]["term_courses"][term_course_index]["code"] === code) {
                 valid_course_index = true;
                 break;
             }
@@ -423,6 +476,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             // Extract the dragging card data
             const draggedCard = newData[dragCardRow].term_courses[dragCardCourse];
 
+            // Drop on empty row
             if (code === null) {
                 term_row_index = findCourseLocation(term, null);
 
@@ -430,57 +484,204 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                     return;
                 }
 
-                // Push dragging course onto row
-                newData[term_row_index].term_courses.push(draggedCard);
-                newData[term_row_index].term_courses.at(-1)["course_term"] = term;
-
-                // Delete old position
-                newData[dragCardRow].term_courses.splice(dragCardCourse, 1);
-
-                setFormattedCourseData(newData);
+                moveCourse(dragCardRow, dragCardCourse, term_row_index, newData[term_row_index].term_courses.length)
             } else {
+                // swap
                 [term_row_index, term_course_index] = findCourseLocation(term, code);
 
                 if (!checkCourseLegal(draggedCard, term)) {
                     return;
                 }
 
-                if (newData[term_row_index].term_courses[term_course_index]["course_code"].includes("PEY")) {
+                if (newData[term_row_index].term_courses[term_course_index]["code"].includes("PEY")) {
                     return;
                 }
 
-                // Replace dragged card position with the dropped position
-                newData[dragCardRow].term_courses[dragCardCourse] = newData[term_row_index].term_courses[term_course_index];
-
-                newData[term_row_index].term_courses[term_course_index] = draggedCard;
-
-                // Swap course term
-                newData[dragCardRow].term_courses[dragCardCourse]["course_term"] = newData[dragCardRow]["term_name"];
-                newData[term_row_index].term_courses[term_course_index]["course_term"] = newData[term_row_index]["term_name"];
-
-                setFormattedCourseData(newData);
+                swapCourse(dragCardRow, dragCardCourse, term_row_index, term_course_index);
             }
 
             draggingCard.current = null;
         }
     };
 
+    const moveCourse = (st, sc, tt, tc, record=true) => {
+        const newData = [...formattedCourseData];
+        // console.log(newData);
+        const sourceCard = newData[st].term_courses[sc];
+        
+        // Add dragging course to location in new term
+        newData[tt].term_courses.splice(tc, 0, sourceCard);
+
+        // Delete the dragging course's old copy
+        newData[st].term_courses.splice(sc + (st === tt && sc > tc), 1);
+        sourceCard["term"] = newData[tt]["term_name"];
+
+        setFormattedCourseData(newData);
+        draggingCard.current = null;
+
+        const action = {
+            operation: "move",
+            source: {
+                row_index: st,
+                course_index: sc,
+            },
+            target: {
+                row_index: tt,
+                course_index: tc,
+            },
+        };
+
+        if(record){
+            if(courseActionStep.current !== courseActionHistory.current.length){
+                const newData = courseActionHistory.current.slice(0, courseActionStep.current);
+                newData.push(action);
+                setCourseActionHistory(newData);
+            } else {
+                setCourseActionHistory([
+                    ...courseActionHistory.current,
+                    action
+                ]);
+            }
+
+            courseActionStep.current += 1;
+        }
+        draggingCard.current = null;
+    }
+
+    const swapCourse = (st, sc, tt, tc, record=true)=>{
+        // source_term, source_course, target_term, target_course
+        const newData = [...formattedCourseData];
+
+        const sourceCard = newData[st].term_courses[sc]
+
+        // Replace dragged card position with the dropped position
+        newData[st].term_courses[sc] = newData[tt].term_courses[tc];
+
+        newData[tt].term_courses[tc] = sourceCard;
+
+        // Swap course term
+        newData[st].term_courses[sc]["term"] = newData[st]["term_name"];
+        newData[tt].term_courses[tc]["term"] = newData[tt]["term_name"];
+
+        setFormattedCourseData(newData);
+
+        const action = {
+            operation: "swap",
+            source: {
+                row_index: st,
+                course_index: sc,
+            },
+            target: {
+                row_index: tt,
+                course_index: tc,
+            },
+        };
+
+        if(record){
+            if(courseActionStep.current !== courseActionHistory.current.length){
+                const newData = courseActionHistory.current.slice(0, courseActionStep.current);
+                newData.push(action);
+                setCourseActionHistory(newData);
+            } else {
+                setCourseActionHistory([
+                    ...courseActionHistory.current,
+                    action
+                ]);
+            }
+    
+            courseActionStep.current += 1;
+        }
+        
+        draggingCard.current = null;
+    }
+
+    const reverseCourseAction = (action)=>{
+        const st = action['source']['row_index'];
+        const sc = action['source']['course_index'];
+        const tt = action['target']['row_index'];
+        const tc = action['target']['course_index'];
+
+        if(action['operation'] === 'swap'){
+            swapCourse(tt, tc, st, sc, false);
+        } else if (action['operation'] === 'move'){
+            moveCourse(tt, tc, st, sc, false);
+        }
+    }
+
+    const undoCourseAction = ()=>{
+        if(courseActionStep.current > 0){
+            reverseCourseAction(courseActionHistory.current.at(courseActionStep.current - 1));
+            
+            courseActionStep.current -= 1;
+        }
+    }
+
+    const redoCourseAction = ()=>{
+        if(courseActionStep.current < courseActionHistory.current.length){
+            const action = courseActionHistory.current.at(courseActionStep.current);
+            
+            const st = action['source']['row_index'];
+            const sc = action['source']['course_index'];
+            const tt = action['target']['row_index'];
+            const tc = action['target']['course_index'];
+    
+            if(action['operation'] === 'swap'){
+                swapCourse(st, sc, tt, tc, false);
+            } else if (action['operation'] === 'move'){
+                moveCourse(st, sc, tt, tc, false);
+            }
+    
+            courseActionStep.current += 1;
+        }
+    }
+
+    const handleKeyDown = (event) => {
+        const focusedElement = document.activeElement;
+        const isInputElement =
+            focusedElement.tagName === "INPUT" || focusedElement.tagName === "TEXTAREA" || focusedElement.isContentEditable;
+        
+        // Currently implemented for move and swap
+        // TODO: Implement for add and delete
+        if (event.ctrlKey || event.metaKey) {
+            if (event.key === "z") {
+                if (!isInputElement) {
+                    event.preventDefault();
+                    undoCourseAction();
+                }
+            } else if (event.key === "y") {
+                if (!isInputElement) {
+                    event.preventDefault();
+                    redoCourseAction();
+                } 
+            }
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [formattedCourseData]);
+
     const checkCourseLegal = (course, term) => {
+        var error_message = null;
         // Some easy ones can be done in front end
-        if (course["course_code"].includes("PEY")) {
-            const error_message = `Illegal Course Action: PEY course is not movable`;
-            setAlertMessage(error_message);
-            return false;
-        } else if (course["course_status"] == 0) {
-            const error_message = "Illegal Course Action: Passed course is not movable";
-            setAlertMessage(error_message);
-            return false;
-        } else if (course["course_status"] == 2) {
-            const error_message = "Illegal Course Action: Failed course is not movable";
-            setAlertMessage(error_message);
-            return false;
+        if (course["code"].includes("PEY")) {
+            error_message = `Illegal Course Action: PEY course is not movable`;
+        } else if (course["status"] == 0) {
+            error_message = "Illegal Course Action: Passed course is not movable";
+        } else if (course["status"] == 2) {
+            error_message = "Illegal Course Action: Failed course is not movable";
         } else {
             // Other need to call backend
+        }
+
+        if(error_message !== null){
+            message.error(error_message);
+
+            return false;
         }
         return true;
     };
@@ -513,164 +714,6 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         courseContainer.style.transition = transitionData;
     };
 
-    const manipulateCourseList = async (action) => {
-        // There are a few possible operations:
-        //      1. Add a brand new course to a term
-        //      2. Swap two courses at two different terms
-        //      3. Move one course from a term to another term
-        //      4. Delete a course
-
-        const action_name = action["action"].toLowerCase();
-
-        if (action_name === "add") {
-            const target_term = action["dest_course"]["course_term"];
-
-            if (!checkCourseLegal(action["source_course"], target_term)) {
-                return [
-                    false,
-                    `The course ${action["source_course"]["course_code"]} can not be added to term ${target_term} since it's not offered in that term.`,
-                ];
-            }
-
-            const target_row_index = findCourseLocation(target_term, null);
-            // TODO: if the term is outside of the current course list, then create a new term if it's within the next three years
-
-            const newData = [...formattedCourseData];
-
-            newData[target_row_index].term_courses.push({
-                ...action["source_course"],
-                course_term: target_term,
-            });
-
-            setFormattedCourseData(newData);
-
-            const action_result = `The course ${action["source_course"]["course_code"]} is successfully added to term ${target_term}`;
-            console.log(action_result);
-            return [true, action_result];
-        } else if (action_name === "swap") {
-            const target_code = action["dest_course"]["course_code"];
-            const target_term = action["dest_course"]["course_term"];
-            const [target_row_index, target_course_index] = findCourseLocation(target_term, target_code);
-
-            const source_code = action["source_course"]["course_code"];
-            const source_term = action["source_course"]["course_term"];
-            const [source_row_index, source_course_index] = findCourseLocation(source_term, source_code);
-
-            if (target_course_index === -1) {
-                return [
-                    false,
-                    `The course ${action["dest_course"]["course_code"]} was not found in the term ${action["dest_course"]["course_term"]}`,
-                ];
-            }
-
-            if (target_row_index === -1) {
-                return [false, `The term term ${action["dest_course"]["course_term"]} does not exist.`];
-            }
-
-            if (source_course_index === -1) {
-                return [
-                    false,
-                    `The course ${action["source_course"]["course_code"]} was not found in the term ${action["source_course"]["course_term"]}`,
-                ];
-            }
-
-            if (source_row_index === -1) {
-                return [false, `The term term ${action["source_course"]["course_term"]} does not exist.`];
-            }
-
-            const newData = [...formattedCourseData];
-            const target_card = newData[target_row_index].term_courses[target_course_index];
-
-            moveCourseCardAnimation(source_row_index, source_course_index, target_row_index, target_course_index);
-            moveCourseCardAnimation(target_row_index, target_course_index, source_row_index, source_course_index);
-
-            newData[target_row_index].term_courses[target_course_index] = newData[source_row_index].term_courses[source_course_index];
-            newData[source_row_index].term_courses[source_course_index] = target_card;
-
-            newData[target_row_index].term_courses[target_course_index]["course_term"] = newData[target_row_index]["term_name"];
-            newData[source_row_index].term_courses[source_course_index]["course_term"] = newData[source_row_index]["term_name"];
-
-            await sleep(500);
-
-            setFormattedCourseData(newData);
-
-            const action_result = `The course ${action["source_course"]["course_code"]} is successfully swapped with the course ${action["dest_course"]["course_code"]}`;
-            console.log(action_result);
-            return [true, action_result];
-        } else if (action_name === "move") {
-            const target_term = action["dest_course"]["course_term"];
-            const target_row_index = findCourseLocation(target_term, null);
-
-            const source_code = action["source_course"]["course_code"];
-            const source_term = action["source_course"]["course_term"];
-            const [source_row_index, source_course_index] = findCourseLocation(source_term, source_code);
-
-            if (target_row_index === -1) {
-                return [false, `The term term ${action["dest_course"]["course_term"]} does not exist.`];
-            }
-
-            if (source_course_index === -1) {
-                return [
-                    false,
-                    `The course ${action["source_course"]["course_code"]} was not found in the term ${action["source_course"]["course_term"]}`,
-                ];
-            }
-
-            if (source_row_index === -1) {
-                return [false, `The term term ${action["source_course"]["course_term"]} does not exist.`];
-            }
-
-            const newData = [...formattedCourseData];
-
-            console.log(source_row_index, source_course_index);
-
-            // Animation
-            moveCourseCardAnimation(source_row_index, source_course_index, target_row_index, -1);
-
-            newData[target_row_index].term_courses.push(newData[source_row_index].term_courses[source_course_index]);
-            newData[target_row_index].term_courses.at(-1)["course_term"] = newData[target_row_index]["term_name"];
-
-            newData[source_row_index].term_courses.splice(source_course_index, 1);
-
-            await sleep(500);
-
-            setFormattedCourseData(newData);
-
-            const action_result = `The course ${action["source_course"]["course_code"]} is successfully moved to the term ${target_term}`;
-            console.log(action_result);
-            return [true, action_result];
-        } else if (action_name === "delete") {
-            const source_code = action["source_course"]["course_code"];
-            const source_term = action["source_course"]["course_term"];
-            const [source_row_index, source_course_index] = findCourseLocation(source_term, source_code);
-
-            if (source_course_index === -1) {
-                return [
-                    false,
-                    `The course ${action["source_course"]["course_code"]} was not found in the term ${action["source_course"]["course_term"]}`,
-                ];
-            }
-
-            if (source_row_index === -1) {
-                return [false, `The term term ${action["source_course"]["course_term"]} does not exist.`];
-            }
-
-            const newData = [...formattedCourseData];
-
-            newData[source_row_index].term_courses.splice(source_course_index, 1);
-
-            setFormattedCourseData(newData);
-
-            const action_result = `The course ${action["source_course"]["course_code"]} is successfully deleted`;
-            console.log(action_result);
-            return [true, action_result];
-        } else {
-            console.log("The requested action is not unrecognized.");
-
-            return [false, "The requested action is not unrecognized. The available actions are: [move, swap, delete, add]."];
-        }
-    };
-
     const handleCourseCardMarginDrop = (term, index, target) => {
         if (draggingCard.current) {
             console.log("Drop on margin", term, index);
@@ -690,21 +733,171 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                 return;
             }
 
-            draggedCard["course_term"] = term;
+            moveCourse(dragCardRow, dragCardCourse, term_row_index, term_course_index);
+        }
+        // Remove styling of margin drop hover effect
+        target.classList.remove("courseCardMarginLeftHover");
+    };
 
-            // Special case where the new course order is re-arranged
+    useEffect(() => {
+        console.log("New action history", courseActionHistory.current, courseActionStep.current);
+    }, [courseActionHistory.current]);
 
-            // Add dragging course to location in new term
-            newData[term_row_index].term_courses.splice(term_course_index, 0, draggedCard);
+    const manipulateCourseList = async (action) => {
+        // There are a few possible operations:
+        //      1. Add a brand new course to a term
+        //      2. Swap two courses at two different terms
+        //      3. Move one course from a term to another term
+        //      4. Delete a course
 
-            // Delete the dragging course's old copy
-            newData[dragCardRow].term_courses.splice(dragCardCourse + (dragCardRow === term_row_index), 1);
+        const action_name = action["action"].toLowerCase();
+
+        if (action_name === "add") {
+            const target_term = action["dest_course"]["term"];
+
+            if (!checkCourseLegal(action["source_course"], target_term)) {
+                return [
+                    false,
+                    `The course ${action["source_course"]["code"]} can not be added to term ${target_term} since it's not offered in that term.`,
+                ];
+            }
+
+            const target_row_index = findCourseLocation(target_term, null);
+            // TODO: if the term is outside of the current course list, then create a new term if it's within the next three years
+
+            const newData = [...formattedCourseData];
+
+            newData[target_row_index].term_courses.push({
+                ...action["source_course"],
+                term: target_term,
+            });
 
             setFormattedCourseData(newData);
-            draggingCard.current = null;
 
-            // Remove styling of margin drop hover effect
-            target.classList.remove("courseCardMarginLeftHover");
+            const action_result = `The course ${action["source_course"]["code"]} is successfully added to term ${target_term}`;
+            console.log(action_result);
+            return [true, action_result];
+        } else if (action_name === "swap") {
+            const target_code = action["dest_course"]["code"];
+            const target_term = action["dest_course"]["term"];
+            const [target_row_index, target_course_index] = findCourseLocation(target_term, target_code);
+
+            const source_code = action["source_course"]["code"];
+            const source_term = action["source_course"]["term"];
+            const [source_row_index, source_course_index] = findCourseLocation(source_term, source_code);
+
+            if (target_course_index === -1) {
+                return [
+                    false,
+                    `The course ${action["dest_course"]["code"]} was not found in the term ${action["dest_course"]["term"]}`,
+                ];
+            }
+
+            if (target_row_index === -1) {
+                return [false, `The term term ${action["dest_course"]["term"]} does not exist.`];
+            }
+
+            if (source_course_index === -1) {
+                return [
+                    false,
+                    `The course ${action["source_course"]["code"]} was not found in the term ${action["source_course"]["term"]}`,
+                ];
+            }
+
+            if (source_row_index === -1) {
+                return [false, `The term term ${action["source_course"]["term"]} does not exist.`];
+            }
+
+            const newData = [...formattedCourseData];
+            const target_card = newData[target_row_index].term_courses[target_course_index];
+
+            moveCourseCardAnimation(source_row_index, source_course_index, target_row_index, target_course_index);
+            moveCourseCardAnimation(target_row_index, target_course_index, source_row_index, source_course_index);
+
+            newData[target_row_index].term_courses[target_course_index] = newData[source_row_index].term_courses[source_course_index];
+            newData[source_row_index].term_courses[source_course_index] = target_card;
+
+            newData[target_row_index].term_courses[target_course_index]["term"] = newData[target_row_index]["term_name"];
+            newData[source_row_index].term_courses[source_course_index]["term"] = newData[source_row_index]["term_name"];
+
+            await sleep(500);
+
+            setFormattedCourseData(newData);
+
+            const action_result = `The course ${action["source_course"]["code"]} is successfully swapped with the course ${action["dest_course"]["code"]}`;
+            console.log(action_result);
+            return [true, action_result];
+        } else if (action_name === "move") {
+            const target_term = action["dest_course"]["term"];
+            const target_row_index = findCourseLocation(target_term, null);
+
+            const source_code = action["source_course"]["code"];
+            const source_term = action["source_course"]["term"];
+            const [source_row_index, source_course_index] = findCourseLocation(source_term, source_code);
+
+            if (target_row_index === -1) {
+                return [false, `The term term ${action["dest_course"]["term"]} does not exist.`];
+            }
+
+            if (source_course_index === -1) {
+                return [
+                    false,
+                    `The course ${action["source_course"]["code"]} was not found in the term ${action["source_course"]["term"]}`,
+                ];
+            }
+
+            if (source_row_index === -1) {
+                return [false, `The term term ${action["source_course"]["term"]} does not exist.`];
+            }
+
+            const newData = [...formattedCourseData];
+
+            console.log(source_row_index, source_course_index);
+
+            // Animation
+            moveCourseCardAnimation(source_row_index, source_course_index, target_row_index, -1);
+
+            newData[target_row_index].term_courses.push(newData[source_row_index].term_courses[source_course_index]);
+            newData[target_row_index].term_courses.at(-1)["term"] = newData[target_row_index]["term_name"];
+
+            newData[source_row_index].term_courses.splice(source_course_index, 1);
+
+            await sleep(500);
+
+            setFormattedCourseData(newData);
+
+            const action_result = `The course ${action["source_course"]["code"]} is successfully moved to the term ${target_term}`;
+            console.log(action_result);
+            return [true, action_result];
+        } else if (action_name === "delete") {
+            const source_code = action["source_course"]["code"];
+            const source_term = action["source_course"]["term"];
+            const [source_row_index, source_course_index] = findCourseLocation(source_term, source_code);
+
+            if (source_course_index === -1) {
+                return [
+                    false,
+                    `The course ${action["source_course"]["code"]} was not found in the term ${action["source_course"]["term"]}`,
+                ];
+            }
+
+            if (source_row_index === -1) {
+                return [false, `The term term ${action["source_course"]["term"]} does not exist.`];
+            }
+
+            const newData = [...formattedCourseData];
+
+            newData[source_row_index].term_courses.splice(source_course_index, 1);
+
+            setFormattedCourseData(newData);
+
+            const action_result = `The course ${action["source_course"]["code"]} is successfully deleted`;
+            console.log(action_result);
+            return [true, action_result];
+        } else {
+            console.log("The requested action is not unrecognized.");
+
+            return [false, "The requested action is not unrecognized. The available actions are: [move, swap, delete, add]."];
         }
     };
 
@@ -739,13 +932,13 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                                 key={`col-${alphanumerical()}`}
                                 style={{ padding: 0, display: "flex", transition: "all 0.3s ease-in-out" }}
                             >
-                                {course["course_code"] !== null && (
+                                {course["code"] !== null && (
                                     <div
                                         className="courseCardMarginLeft"
                                         onDragOver={(e) => e.preventDefault()}
                                         // TODO: Finish this
                                         onDrop={(event) => {
-                                            handleCourseCardMarginDrop(course["course_term"], index, event["target"]);
+                                            handleCourseCardMarginDrop(course["term"], index, event["target"]);
                                         }}
                                         onDragEnter={(event) => {
                                             event["target"].classList.add("courseCardMarginLeftHover");
@@ -760,32 +953,32 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                                     style={{
                                         width: 130,
                                         height: 60,
-                                        color: getCourseColor(course["course_status"]),
+                                        color: getCourseColor(course["status"]),
                                     }}
-                                    className={`CourseCardFamily ${course["course_code"] !== null ? "CourseCard" : "CourseCardHidden"}`}
+                                    className={`CourseCardFamily ${course["code"] !== null ? "CourseCard" : "CourseCardHidden"}`}
                                     onClick={() =>
-                                        course["course_code"] !== null &&
+                                        course["code"] !== null &&
                                         showCourseInfoModal({
-                                            code: course["course_code"],
-                                            term: course["course_term"],
+                                            code: course["code"],
+                                            term: course["term"],
                                         })
                                     }
                                     draggable
-                                    onDragStart={() => handleCourseCardDragStart(course["course_term"], course["course_code"])}
+                                    onDragStart={() => handleCourseCardDragStart(course["term"], course["code"])}
                                     onDragOver={(e) => e.preventDefault()}
-                                    onDrop={() => handleCourseCardDrop(course["course_term"], course["course_code"])}
+                                    onDrop={() => handleCourseCardDrop(course["term"], course["code"])}
                                 >
                                     <span
                                         style={{
                                             fontSize: 14,
                                             fontFamily: "arial",
                                             textDecoration: "none",
-                                            color: getCourseColor(course["course_status"]),
+                                            color: getCourseColor(course["status"]),
                                             fontWeight: "bold",
                                         }}
                                         className="CourseCardFamily CourseCardCode"
                                     >
-                                        {course["course_code"]}
+                                        {course["code"]}
                                     </span>
 
                                     <div
@@ -797,7 +990,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                                         }}
                                         className="CourseCardFamily CourseCardName"
                                     >
-                                        {course["course_name"]}
+                                        {course["name"]}
                                     </div>
                                 </div>
                             </Col>
@@ -860,10 +1053,6 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         console.log(courseSearchValue);
     };
 
-    const handleAlertClose = () => {
-        setAlertMessage(null);
-    };
-
     const tutorialTitle = <span>Tutorial</span>;
 
     const tutorialContent = (
@@ -878,25 +1067,35 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
     const thirdSemRequiredCourses = ["ECE201H1", "ECE212H1", "ECE241H1", "ECE244H1", "MAT290H1", "MAT291H1"];
     const fourthSemRequiredCourses = ["ECE216H1", "ECE221H1", "ECE231H1", "ECE243H1", "ECE297H1"];
 
-    const RequiredCourseCardSmall = ({ course_codes }) => {
-        return course_codes.map((course_code) => {
-            const course_info = findCourse(course_code);
-            const course_passed = course_info !== null && course_info.course_status === 0;
+    const RequiredCourseCardSmall = ({ codes }) => {
+        return codes.map((code) => {
+            const course_info = findCourse(code);
+            const status = course_info !== null ? course_info.status : 2;
             return (
                 <Col
                     className="lowerProgramRequirementSmallCard"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                         showCourseInfoModal(course_info);
-                        console.log(course_code);
+                        console.log(code);
                     }}
                     key={`LPRSC-${alphanumerical()}`}
                 >
-                    <span>{course_code}</span>
+                    <span>{code}</span>
 
-                    {course_passed && <Checkbox checked={course_passed} className="lowerProgramRequirementSmallCardCheckBox" />}
-
-                    {!course_passed && (
+                    {status === 0 && <Checkbox checked={true} className="lowerProgramRequirementSmallCardCheckBox" />}
+                    {status === 1 && (
+                        <MinusOutlined
+                            style={{
+                                border: "1px solid orange",
+                                borderRadius: "4px",
+                                backgroundColor: "orange",
+                                color: "white",
+                                fontWeight: "bold",
+                            }}
+                        />
+                    )}
+                    {status === 2 && (
                         <CloseOutlined
                             style={{
                                 border: "1px solid red",
@@ -912,9 +1111,9 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         });
     };
 
-    const EssentialsCourseCardSmall = ({ course_codes }) => {
-        return course_codes.map((course_code) => {
-            const course_info = findCourse(course_code);
+    const EssentialsCourseCardSmall = ({ codes }) => {
+        return codes.map((code) => {
+            const course_info = findCourse(code);
 
             return (
                 <Col
@@ -922,11 +1121,11 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                         showCourseInfoModal(course_info);
-                        console.log(course_code);
+                        console.log(code);
                     }}
                     key={`ESCS-${alphanumerical()}`}
                 >
-                    <span style={{ color: getCourseColor(course_info && course_info.course_status) }}>{course_code}</span>
+                    <span style={{ color: getCourseColor(course_info && course_info.status) }}>{code}</span>
                 </Col>
             );
         });
@@ -977,13 +1176,13 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         },
     ];
 
-    const canGraduate = !graduationCheckList.some(item => !item['status']);
+    const canGraduate = !graduationCheckList.some((item) => !item["status"]);
 
     const essentialColumns = [
         {
             title: "",
-            dataIndex: "course_name",
-            key: "course_name",
+            dataIndex: "name",
+            key: "name",
             align: "left",
             render: (item) => {
                 return <p style={{ fontWeight: "bold" }}>{item}</p>;
@@ -997,7 +1196,7 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             render: (item, record, row) => {
                 return (
                     <Row>
-                        <EssentialsCourseCardSmall course_codes={item} />
+                        <EssentialsCourseCardSmall codes={item} />
                     </Row>
                 );
             },
@@ -1006,32 +1205,32 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
 
     const essentialData = [
         {
-            course_name: "Engineering Economics",
+            name: "Engineering Economics",
             key: "engineering_economics",
             courses: ["ECE472H1"],
         },
         {
-            course_name: "Capstone",
+            name: "Capstone",
             key: "capstone",
             courses: ["ECE496Y1"],
         },
         {
-            course_name: "Science/Math",
+            name: "Science/Math",
             key: "science/math",
             courses: ["ECE302H1"],
         },
         {
-            course_name: "Technical Electives",
+            name: "Technical Electives",
             key: "technical_electives",
             courses: ["CSC317H1", "ECE326H1", "ECE454H1"],
         },
         {
-            course_name: "HSS and CS",
+            name: "HSS and CS",
             key: "HSS&CS",
             courses: ["CLA204H1", "LIN102H1", "JRE300H1", "JRE410H1"],
         },
         {
-            course_name: "Free Elective",
+            name: "Free Elective",
             key: "free_elective",
             courses: ["CSC384H1"],
         },
@@ -1042,16 +1241,16 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             label: `Core Years`,
             key: "core_years_tab",
             children: (
-                <div className="lowerProgramRequirementWrapper" style={{paddingRight: '24px'}}>
+                <div className="lowerProgramRequirementWrapper" style={{ paddingRight: "24px" }}>
                     <div style={{ textAlign: "left" }}>
                         <Title level={3}>First Year</Title>
                     </div>
                     <Row>
-                        <RequiredCourseCardSmall course_codes={firstSemRequiredCourses}></RequiredCourseCardSmall>
+                        <RequiredCourseCardSmall codes={firstSemRequiredCourses}></RequiredCourseCardSmall>
                     </Row>
 
                     <Row style={{ marginTop: "10px" }}>
-                        <RequiredCourseCardSmall course_codes={secondSemRequiredCourses}></RequiredCourseCardSmall>
+                        <RequiredCourseCardSmall codes={secondSemRequiredCourses}></RequiredCourseCardSmall>
                     </Row>
 
                     <Divider />
@@ -1059,11 +1258,11 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                         <Title level={3}>Second Year</Title>
                     </div>
                     <Row>
-                        <RequiredCourseCardSmall course_codes={thirdSemRequiredCourses}></RequiredCourseCardSmall>
+                        <RequiredCourseCardSmall codes={thirdSemRequiredCourses}></RequiredCourseCardSmall>
                     </Row>
 
                     <Row style={{ marginTop: "10px" }}>
-                        <RequiredCourseCardSmall course_codes={fourthSemRequiredCourses}></RequiredCourseCardSmall>
+                        <RequiredCourseCardSmall codes={fourthSemRequiredCourses}></RequiredCourseCardSmall>
                     </Row>
                 </div>
             ),
@@ -1076,13 +1275,22 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         {
             label: `Electives and Essentials`,
             key: "additional_required_courses",
-            children: <Table style={{paddingRight: '24px'}} columns={essentialColumns} dataSource={essentialData} showHeader={false} pagination={false} size="small" />,
+            children: (
+                <Table
+                    style={{ paddingRight: "24px" }}
+                    columns={essentialColumns}
+                    dataSource={essentialData}
+                    showHeader={false}
+                    pagination={false}
+                    size="small"
+                />
+            ),
         },
         {
             label: `CEAB Requirements`,
             key: "ceab_requirements_tab",
             children: (
-                <div style={{paddingRight: '24px'}}>
+                <div style={{ paddingRight: "24px" }}>
                     <Table
                         columns={CEABDetailsColumns}
                         dataSource={CEABDetailsData}
@@ -1101,17 +1309,21 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
             label: `Graduation Status`,
             key: "graduation_eligibility_tab",
             children: (
-                <div style={{paddingRight: '24px'}}>
+                <div style={{ paddingRight: "24px" }}>
                     <div style={{ textAlign: "left" }}>
                         <Title level={3}>PEY Requirement</Title>
 
                         {userInfo && userInfo["PEY"] ? (
-                            <Text type="success" strong>You meet the Practical Experience requirement.</Text>
+                            <Text type="success" strong>
+                                You meet the Practical Experience requirement.
+                            </Text>
                         ) : (
-                            <Text type="danger" strong>You do NOT meet the Practical Experience requirement currently.</Text>
+                            <Text type="danger" strong>
+                                You do NOT meet the Practical Experience requirement currently.
+                            </Text>
                         )}
                     </div>
-                    <Divider style={{}}/>
+                    <Divider style={{}} />
                     <div style={{ textAlign: "left" }}>
                         <Title level={3}>Graduation Eligibility</Title>
                         <List
@@ -1119,15 +1331,20 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                             dataSource={graduationCheckList}
                             renderItem={(item, index) => (
                                 <List.Item>
-                                    <Text type={item['status'] ? 'success' : 'danger'} strong> {index + 1}: {item['text']} </Text>
+                                    <Text type={item["status"] ? "success" : "danger"} strong>
+                                        {" "}
+                                        {index + 1}: {item["text"]}{" "}
+                                    </Text>
                                 </List.Item>
                             )}
                         />
 
                         {/* <Divider/> */}
-                        
-                        <div style={{textAlign: 'center'}}>
-                            <Title level={4} type={canGraduate ? "success" : "danger"}>{canGraduate ? "You can graduate!" : "You can't graduate!"}</Title>
+
+                        <div style={{ textAlign: "center" }}>
+                            <Title level={4} type={canGraduate ? "success" : "danger"}>
+                                {canGraduate ? "You can graduate!" : "You can't graduate!"}
+                            </Title>
                         </div>
                     </div>
                 </div>
@@ -1135,13 +1352,19 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
         },
     ];
 
+    const requestCourseByCode = (code)=>{
+        return !code ? [] : [{
+            value: <div draggable style={{color: 'red'}}>{code}</div>
+        }]
+    }
+
     // Profile does not meet the Practical Experience Requirement.
     // This profile does not meet all requirements, as a result you will not graduate!
 
     return (
         <div className="course-table" style={{ overflow: "auto" }} ref={tableRef}>
             <Modal
-                title={`${currentCourseDetails.course_code} - ${currentCourseDetails.course_name} (${currentCourseDetails.offered})`}
+                title={`${currentCourseDetails.code} - ${currentCourseDetails.name} (${currentCourseDetails.offered})`}
                 open={courseInfoModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -1262,21 +1485,6 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                 </div>
             </Modal>
 
-            {alertMessage !== null && (
-                <Alert
-                    style={{
-                        position: "fixed",
-                        top: "10px",
-                        left: "40%",
-                        fontSize: "12pt",
-                    }}
-                    message={alertMessage}
-                    type="error"
-                    closable
-                    onClose={handleAlertClose}
-                />
-            )}
-
             <ConfigProvider
                 theme={{
                     components: {
@@ -1322,16 +1530,16 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                                                     manipulateCourseList({
                                                         action: "swap",
                                                         source_course: {
-                                                            course_code: "JRE410H1 F",
-                                                            course_name: "Markets and Competitive Strategy",
-                                                            course_term: "20249",
-                                                            course_status: 1,
+                                                            code: "JRE410H1 F",
+                                                            name: "Markets and Competitive Strategy",
+                                                            term: "20249",
+                                                            status: 1,
                                                         },
                                                         dest_course: {
-                                                            course_code: "ECE462H1 S",
-                                                            course_name: "Multimedia System",
-                                                            course_term: "20251",
-                                                            course_status: 1,
+                                                            code: "ECE462H1 S",
+                                                            name: "Multimedia System",
+                                                            term: "20251",
+                                                            status: 1,
                                                         },
                                                     });
                                                 }}
@@ -1339,17 +1547,20 @@ const CourseTable = ({ groupedCourses, draggingCard, queryCourses, setQueryCours
                                         </Link>
                                     </Popover>
                                 </div>
-
-                                <Input
-                                    placeholder="Search Course"
-                                    value={courseSearchValue}
-                                    onChange={(event) => {
-                                        handleCourseSearchRequest(event);
-                                    }}
-                                    style={{
-                                        width: "20%",
-                                    }}
-                                />
+                                
+                                {/* TODO: Finish course search with popover */}
+                                <Popover placement="rightTop" title={"Available Courses"} content={<div draggable style={{width: '130px'}}>{courseSearchValue}</div>} zIndex={1} >
+                                    <Input
+                                        placeholder="Search Course"
+                                        value={courseSearchValue}
+                                        onChange={(event) => {
+                                            handleCourseSearchRequest(event);
+                                        }}
+                                        style={{
+                                            width: "20%",
+                                        }}
+                                    />
+                                </Popover>
                             </div>
                             <Divider
                                 style={{

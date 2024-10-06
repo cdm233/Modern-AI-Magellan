@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider, Link, Navigate, redirect, useNavigate, BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginForm from "./login.js";
 import { Flex } from "antd";
+import AdminPanel from "./admin_panel.js";
 
 const Root = () => {
     const [authenticated, setAuthenticated] = useState(false);
@@ -36,6 +37,12 @@ const Root = () => {
 							<Link to={"/dashboard/profile1"}>Go to profile1</Link>
 						</div>
 					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/admin"
+				element={
+					<AdminPanel></AdminPanel>
 				}
 			/>
 			<Route path="/dashboard/profile1" element={

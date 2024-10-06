@@ -7,17 +7,19 @@ const { Title } = Typography;
 
 function LoginForm({ setAuthenticated }) {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
 
     const handleSubmit = async () => {
         console.log("Valid user")
-        setAuthenticated(true);
-
         // Send request to server
+        const success_login = true;
 
-        navigate('/dashboard')
+        if(success_login){
+            setAuthenticated(true);
+
+            navigate('/dashboard')
+        } else {
+
+        }
     };
 
 	const onFinish = (values) => {
@@ -51,7 +53,7 @@ function LoginForm({ setAuthenticated }) {
                 }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
-                autoComplete="off"
+                autoComplete="on"
             >
                 <Form.Item
                     label="UTORid"
