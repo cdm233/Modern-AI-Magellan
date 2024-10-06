@@ -42,7 +42,7 @@ jobs:
                   overwrite: true
 
             - name: Deploy frontend on EC2
-              uses: appleboy/ssh-action@v0.1.3
+              uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.EC2_HOST }}
                   username: ${{ secrets.EC2_USER }}
