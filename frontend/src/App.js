@@ -71,7 +71,7 @@ function App() {
     console.log("Temp, test")
     useEffect(() => {
         // Fetch the JSON file from the public folder
-        axios.post('http://localhost:8000/api/', {
+        axios.post('/api/', {
             request: 'get_user_info',
             payload: {
                 utorid: 'wangw362', 
