@@ -68,6 +68,7 @@ function App() {
     const courseListMinWidth = 3 * 130 + 100;
     const courseListDefaultWidth = 6 * 130 + 100;
 
+    console.log("Temp, test")
     useEffect(() => {
         // Fetch the JSON file from the public folder
         axios.post('http://localhost:8000/api/', {
