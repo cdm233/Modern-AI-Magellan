@@ -39,7 +39,8 @@ function App() {
         "name": "Demeng Chen",
         "email": "demeng.chen@mail.utoronto.ca",
         "degree": "AECPEBASC",
-        "gender": "Male"
+        "gender": "Male",
+        "program": ""
     });
 
     const [groupedCourses, setGroupedCourses] = useState({});
@@ -68,10 +69,9 @@ function App() {
     const courseListMinWidth = 3 * 130 + 100;
     const courseListDefaultWidth = 6 * 130 + 100;
 
-    console.log("Temp, test")
     useEffect(() => {
         // Fetch the JSON file from the public folder
-        axios.post('/api/', {
+        axios.post('http://localhost:8000/api/', {
             request: 'get_user_info',
             payload: {
                 utorid: 'wangw362', 
@@ -99,6 +99,15 @@ function App() {
             .then((response) => response.json())
             .then((data) => {
                 // Update current user data after fetch
+                setCurrentUserInfo({
+                    "student_number": data['Student Number'],
+                    "name": data.Name,
+                    "email": data.Email,
+                    "altemail": data['Alternative Email'],
+                    "degree": data['Degree Post'],
+                    "gender": data.Gender,
+                    "program": data['Graduation Program'],
+                })
                 set_current_user_course_list(data.schedule);
             })
             .catch((error) => console.error("Error fetching the JSON data:", error));
@@ -221,7 +230,7 @@ function App() {
                                 draggingCard={draggingCard}
                                 queryCourses={queryCourses}
                                 setQueryCourses={setQueryCourses}
-                                
+                                userInfo={currentUserInfo}
                             />
                         }
                         right={

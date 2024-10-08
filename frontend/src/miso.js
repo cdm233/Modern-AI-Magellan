@@ -44,11 +44,16 @@ function get_student_data(){
     
             const element_style = td.style.color === '' ? td.getElementsByTagName('a')[0].style : td.style;
             
+            var rand_area = Math.round(Math.random() * 7);
+            rand_area = (rand_area == 7 ? 'o' : rand_area);
+
             schedule_data.push({
                 "term": cur_term,
                 "code": code,
                 "name": name,
-                "status": get_status(element_style)
+                "status": get_status(element_style),
+                "area": rand_area,
+                "type": "b"
             })
         }
     }

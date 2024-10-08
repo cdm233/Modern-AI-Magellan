@@ -36,6 +36,8 @@ const AdminPanelContent = () => {
         "password": ""
     });
 
+    const [userFileList, setUserFileList] = useState([]);
+
     function getDatabaseStats() {
         setDB_stats(["Database statistics is now refreshed."]);
     }
@@ -48,24 +50,45 @@ const AdminPanelContent = () => {
         message.success("All users deleted from the Database.");
     }
 
+    const handleChange = (info) => {
+        console.log(info);
+        setUserFileList(info.fileList);
+
+        var newFileList = [];
+        for(const file of info.fileList){
+            newFileList = [...newFileList, file.originFileObj]
+        }
+        setUserFileList(newFileList);
+    };
+
+    function uploadUserFile(){
+        if(userFileList.length === 0){
+            message.error("No file selected!");
+            return;
+        }
+        
+        for(const file of userFileList){
+            const reader = new FileReader();
+
+            reader.onload = e => {
+                console.log(JSON.parse(e.target.result));
+            };
+            reader.readAsText(file);
+        }
+
+        message.success('User created!');
+    }
+
     const userUploadProps = {
         name: "file",
-
         multiple: true,
-        action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
         headers: {
             authorization: "authorization-text",
         },
-        onChange(info) {
-            if (info.file.status !== "uploading") {
-                console.log(info.file, info.fileList);
-            }
-            if (info.file.status === "done") {
-                message.success(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === "error") {
-                message.error(`${info.file.name} file upload failed.`);
-            }
-        },
+        onChange: handleChange,
+        beforeUpload: ()=>{
+            return false;
+        }
     };
 
     function handleInputChange(key, newValue) {
@@ -90,6 +113,13 @@ const AdminPanelContent = () => {
                             />
                         </Flex>
                     ))}
+                    
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '15px'}}>
+                        <Button type="primary" onClick={()=>{
+                            console.log(dummyUserInfo);
+                            message.success('User created!');
+                        }}>Upload User Manually</Button>
+                    </div>
 
                     <Divider>OR Upload User File Directly</Divider>
 
@@ -103,9 +133,8 @@ const AdminPanelContent = () => {
                     
                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '15px'}}>
                         <Button type="primary" onClick={()=>{
-                            console.log(dummyUserInfo);
-                            message.success('User created!')
-                        }}>Upload</Button>
+                            uploadUserFile();
+                        }}>Upload User with File</Button>
                     </div>
                 </div>
             ),
@@ -221,10 +250,12 @@ const AdminPanelContent = () => {
 const AdminPanel = () => {
     const [adminLogin, setAdminLogin] = useState(false);
     const [loginInputValue, setLoginInputValue] = useState("");
-    const hardcodedHash = "0d544a847a0c1409436d076af031a03957d5661254a4497fa6d3f2035c6f68b3";
+    const hardcodedHash = "6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090";
 
     function admin_login(loginInputValue) {
         const hashedPassword = CryptoJS.SHA256(loginInputValue).toString();
+
+        console.log(hashedPassword);
         if (hashedPassword === hardcodedHash) {
             setAdminLogin(true);
         } else {

@@ -301,6 +301,13 @@ const ChatInterface = ({ chatHistory, setChatHistory, draggingCourse, courseList
         setCurrentChatValue(event.target.value);
     };
 
+    const root_ref = useRef(null);
+
+    if(root_ref.current !== null){
+        
+        console.log(root_ref.current.offsetWidth);
+    }
+
     return (
         <div
             style={{
@@ -310,8 +317,9 @@ const ChatInterface = ({ chatHistory, setChatHistory, draggingCourse, courseList
                 alignItems: "center",
                 backgroundColor: "rgb(250, 250, 250)",
             }}
+            ref={root_ref}
         >
-            <div style={{ height: "92%", minWidth: "850px", maxWidth: "80%" }}>
+            <div style={{ height: "92%", minWidth: "350px", maxWidth: "80%" }}>
                 {chatHistory.map((item, index) => (
                     <ChatRow key={index} index={index} turn={item} chatHistory={chatHistory} setChatHistory={setChatHistory} />
                 ))}

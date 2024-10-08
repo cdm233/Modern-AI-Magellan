@@ -41,6 +41,10 @@ const format_course_data_source = (groupedCourses) => {
                     code: courses[i]["code"],
                     status: courses[i]["status"],
                     term: courses[i]["term"],
+                    
+                    area: courses[i]["area"],
+                    type: courses[i]["type"],
+
                     Math: courses[i]['math_ceab'],
                     NS: courses[i]['ns_ceab'],
                     CS: courses[i]['cs_ceab'],

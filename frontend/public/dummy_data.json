@@ -4,296 +4,392 @@
     "Email": "demeng.chen@mail.utoronto.ca",
     "Alternative Email": "demeng.chen@mail.utoronto.ca",
     "Gender": "Male",
-    "PEY": false,
     "Degree Post": "AECPEBASC",
+    "Graduation Program": "",
     "schedule": [
         {
             "term": "20209",
             "code": "APS100H1 F",
             "name": "Orientation to Engineering",
-            "status": 2
+            "status": 0,
+            "area": 5,
+            "type": "d"
         },
         {
             "term": "20209",
             "code": "APS110H1 F",
             "name": "Engineering Chemistry and Materials Science",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20209",
             "code": "APS111H1 F",
             "name": "Engineering Strategies & Practice I",
-            "status": 0
+            "status": 0,
+            "area": "o",
+            "type": "d"
         },
         {
             "term": "20209",
             "code": "CIV100H1 F",
             "name": "Mechanics",
-            "status": 0
+            "status": 0,
+            "area": 0,
+            "type": "d"
         },
         {
             "term": "20209",
             "code": "MAT186H1 F",
             "name": "Calculus I",
-            "status": 0
+            "status": 0,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20209",
             "code": "MAT188H1 F",
             "name": "Linear Algebra",
-            "status": 0
+            "status": 0,
+            "area": 5,
+            "type": "d"
         },
         {
             "term": "20211",
             "code": "APS105H1 S",
             "name": "Computer Fundamentals",
-            "status": 0
+            "status": 0,
+            "area": 2,
+            "type": "d"
         },
         {
             "term": "20211",
             "code": "APS112H1 S",
             "name": "Engineering Strategies & Practice II",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20211",
             "code": "ECE110H1 S",
             "name": "Electrical Fundamentals",
-            "status": 0
+            "status": 0,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20211",
             "code": "ECE191H1 S",
             "name": "Introduction to Electrical and Computer Engineering",
-            "status": 0
+            "status": 0,
+            "area": 0,
+            "type": "d"
         },
         {
             "term": "20211",
             "code": "MAT187H1 S",
             "name": "Calculus II",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20211",
             "code": "MIE100H1 S",
             "name": "Dynamics",
-            "status": 0
+            "status": 0,
+            "area": "o",
+            "type": "d"
         },
         {
             "term": "20219",
             "code": "ECE201H1 F",
             "name": "Seminar Course: Electrical and Computer Engineering",
-            "status": 0
+            "status": 0,
+            "area": 0,
+            "type": "d"
         },
         {
             "term": "20219",
             "code": "ECE212H1 F",
             "name": "Circuit Analysis",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20219",
             "code": "ECE241H1 F",
             "name": "Digital Systems",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20219",
             "code": "ECE244H1 F",
             "name": "Programming Fundamentals",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20219",
             "code": "MAT290H1 F",
             "name": "Advanced Engineering Mathematics",
-            "status": 0
+            "status": 0,
+            "area": 4,
+            "type": "d"
         },
         {
             "term": "20219",
             "code": "MAT291H1 F",
             "name": "Calculus III",
-            "status": 0
+            "status": 0,
+            "area": 3,
+            "type": "d"
         },
         {
             "term": "20221",
             "code": "ECE216H1 S",
             "name": "Signals and Systems",
-            "status": 0
+            "status": 0,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20221",
             "code": "ECE221H1 S",
             "name": "Electric and Magnetic Fields",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "d"
         },
         {
             "term": "20221",
             "code": "ECE231H1 S",
             "name": "Introductory Electronics",
-            "status": 0
+            "status": 0,
+            "area": 2,
+            "type": "d"
         },
         {
             "term": "20221",
             "code": "ECE243H1 S",
             "name": "Computer Organization",
-            "status": 0
+            "status": 0,
+            "area": 5,
+            "type": "d"
         },
         {
             "term": "20221",
             "code": "ECE297H1 S",
             "name": "Communication and Design",
-            "status": 0
+            "status": 0,
+            "area": 0,
+            "type": "d"
         },
         {
             "term": "20225",
             "code": "APS360H1 Y",
             "name": "Applied Fundamentals of Deep Learning",
-            "status": 0
+            "status": 0,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20225",
             "code": "JRE300H1 F",
             "name": "Fundamentals of Accounting and Finance",
-            "status": 0
+            "status": 0,
+            "area": 4,
+            "type": "H"
         },
         {
             "term": "20229",
             "code": "CSC317H1 F",
             "name": "Computer Graphics (Formerly CSC418H1)",
-            "status": 0
+            "status": 0,
+            "area": 3,
+            "type": "d"
         },
         {
             "term": "20229",
             "code": "ECE302H1 F",
             "name": "Probability and Applications",
-            "status": 0
+            "status": 0,
+            "area": 2,
+            "type": "d"
         },
         {
             "term": "20229",
             "code": "ECE326H1 F",
             "name": "Programming Languages (formerly CSC326H1)",
-            "status": 0
+            "status": 0,
+            "area": 2,
+            "type": "d"
         },
         {
             "term": "20229",
             "code": "ECE345H1 F",
             "name": "Algorithms & Data Structures",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "k"
         },
         {
             "term": "20229",
             "code": "ECE361H1 F",
             "name": "Computer Networks I",
-            "status": 0
+            "status": 0,
+            "area": 5,
+            "type": "k"
         },
         {
             "term": "20231",
             "code": "ECE311H1 S",
             "name": "Introduction to Control Systems",
-            "status": 0
+            "status": 0,
+            "area": 4,
+            "type": "k"
         },
         {
             "term": "20231",
             "code": "ECE344H1 S",
             "name": "Operating Systems",
-            "status": 0
+            "status": 0,
+            "area": 6,
+            "type": "k"
         },
         {
             "term": "20231",
             "code": "ECE421H1 S",
             "name": "Introduction to Machine Learning",
-            "status": 0
+            "status": 0,
+            "area": 0,
+            "type": "d"
         },
         {
             "term": "20231",
             "code": "ECE472H1 S",
             "name": "Engineering Economic Analysis & Entrepreneurship",
-            "status": 0
+            "status": 0,
+            "area": 3,
+            "type": "d"
         },
         {
             "term": "20235",
             "code": "PEY400Y1 Y",
             "name": "",
-            "status": 1
+            "status": 1,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20239",
             "code": "PEY400Y1 Y",
             "name": "",
-            "status": 1
+            "status": 1,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20241",
             "code": "PEY400Y1 Y",
             "name": "",
-            "status": 1
+            "status": 1,
+            "area": 2,
+            "type": "d"
         },
         {
             "term": "20245",
             "code": "JRE410H1 F",
             "name": "Markets and Competitive Strategy",
-            "status": 1
+            "status": 0,
+            "area": 4,
+            "type": "H"
         },
         {
             "term": "20249",
             "code": "CLA204H1 F",
             "name": "Intro to Classical Mythology",
-            "status": 1
+            "status": 1,
+            "area": 1,
+            "type": "C"
         },
         {
             "term": "20249",
             "code": "CSC384H1 F",
             "name": "Introduction to Artificial Intelligence",
-            "status": 1
+            "status": 1,
+            "area": 3,
+            "type": "d"
         },
         {
             "term": "20249",
             "code": "ECE454H1 F",
             "name": "Computer Systems Programming",
-            "status": 1
+            "status": 1,
+            "area": 4,
+            "type": "d"
         },
         {
             "term": "20249",
             "code": "ECE496Y1 Y",
             "name": "Design Project",
-            "status": 1
+            "status": 1,
+            "area": 1,
+            "type": "d"
         },
         {
             "term": "20249",
             "code": "JRE410H1 F",
             "name": "Markets and Competitive Strategy",
-            "status": 1
+            "status": 1,
+            "area": 5,
+            "type": "H"
         },
         {
             "term": "20251",
             "code": "ECE496Y1 Y",
             "name": "Design Project",
-            "status": 1
+            "status": 1,
+            "area": 3,
+            "type": "d"
         },
         {
             "term": "20251",
             "code": "CSC401H1F S",
             "name": "",
-            "status": 1
+            "status": 1,
+            "area": 2,
+            "type": "d"
         },
         {
             "term": "20251",
             "code": "ECE318H1 S",
             "name": "Fundamentals of Optics",
-            "status": 1
+            "status": 1,
+            "area": 1,
+            "type": "k"
         },
         {
             "term": "20251",
             "code": "ECE462H1 S",
             "name": "Multimedia Systems",
-            "status": 1
+            "status": 1,
+            "area": 3,
+            "type": "d"
         },
         {
             "term": "20251",
             "code": "LIN102H1 S",
             "name": "Introduction to Linguistics: Sentence Structure and Meaning (Formerly LIN100Y1)",
-            "status": 1
+            "status": 1,
+            "area": 6,
+            "type": "C"
         }
     ]
 }
